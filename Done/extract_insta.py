@@ -44,6 +44,7 @@ class Insta:
         # sleep(1)
         # self.session7 = self.login(username='uhiotyui6@gmail.com', password='ammar2020')
         # sleep(1)
+
         # self.session8 = self.login(username='uiuyhjyy@gmail.com', password='ammar2020')
         # sleep(1)
         # self.session9 = self.login(username='jvbjyhg@gmail.com', password='ammar2020')

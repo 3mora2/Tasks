@@ -227,14 +227,15 @@ class Upload:
         sleep(1)
         try:
             WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located(self.FIRST_ELEMENT_SELECTOR)).click()
+            sleep(4)
         except:
             print('- Not found')
             return 'False'
-        sleep(3)
+        sleep(1)
         try:
 
-            WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(self.SKU_INPUT_SELECTOR)).send_keys(serial)
-            sleep(3)
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located(self.SKU_INPUT_SELECTOR)).send_keys(serial)
+            sleep(5)
             while True:
                 if not len(self.driver.find_elements_by_css_selector('.kHWBRM')):
                     break
@@ -348,7 +349,7 @@ class Upload:
                             continue
 
                     if res == 'SKU FOUND':
-                        self.sheet.cell(i, 6).fill = PatternFill(fill_type='solid', fgColor='ff0000')
+                        self.sheet.cell(i, 6).fill = PatternFill(fill_type='solid', fgColor='0000FF')
                         continue
 
                     if res is False:
@@ -360,7 +361,22 @@ class Upload:
                                 print(sku)
                         except:
                             pass
-                        self.sheet.cell(i, 6).fill = PatternFill(fill_type='solid', fgColor='ff0000')
+                        try:
+                            if price and self.driver.find_element_by_name('price').get_attribute('value') == '':
+                                self.add_price(price)
+                            try:
+                                WebDriverWait(self.driver, 10).until(
+                                    (ec.element_to_be_clickable(self.SAVE_CHANGE_SELECTOR))).click()
+                                sleep(1)
+                                WebDriverWait(self.driver, 10).until(
+                                    (ec.visibility_of_element_located(self.SUBMIT_SELECTOR))).click()
+                                sleep(1)
+                            except:
+                                print(traceback.print_exc())
+                                print('Cant Save')
+                        except:
+                            pass
+                        self.sheet.cell(i, 6).fill = PatternFill(fill_type='solid', fgColor='00FF00')
                         continue
 
                 sleep(1)
@@ -373,6 +389,7 @@ class Upload:
 
                 if _quantity is not None and names_way is False:
                     self.add_qu(_quantity)
+
                 try:
                     title = self.driver.find_element_by_css_selector('input[placeholder="Title"]').get_attribute('value')
                     self.sheet.cell(i, 9).value = title

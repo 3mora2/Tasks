@@ -74,7 +74,6 @@ class Insta:
         resp = self.get_like(code=code)
         num = resp['data']['shortcode_media']['edge_liked_by']['count']
         print('- Number of Likes {}'.format(num))
-        p = 1
         end_cursor = ''
         while u:
             if resp != 'errors':
@@ -87,9 +86,7 @@ class Insta:
                     profile_pic_url = i['node']['profile_pic_url']
                     pr = f'ID: {id} ,username: {user} ,Full Name: {full_name}'
                     dict_l[id] = {'name': full_name, 'user': user, 'img': profile_pic_url}
-                    p += 1
-                    self.print_percent_done(p, num, data=pr)
-
+                    self.print_percent_done(len(dict_l), num, data=pr)
 
                 sleep(2)
                 resp = self.get_like(code=code, end_cursor=end_cursor)
@@ -97,11 +94,9 @@ class Insta:
                 print('- please wait...')
                 sleep(15)
                 resp = self.get_like(code=code, end_cursor=end_cursor)
-            if p >= 700:
-                break
+        print('- Done')
         winner = dict_l[random.choice(list(dict_l.keys()))]
-        print()
-        print(f'- Winner Is (name: {winner["name"]}, username: {winner["user"]}, img: {winner["img"]} )')
+        print(f'- Winner Is (name: {winner["name"]}, username: {winner["user"]}, img: {winner["img"]} )', end='\r')
 
     def get_like(self, code, end_cursor=None):
         if end_cursor is None:
@@ -121,7 +116,7 @@ class Insta:
             return 'errors'
 
     @staticmethod
-    def print_percent_done(index, total, data, bar_len=50):
+    def print_percent_done(index, total, data='', bar_len=50):
         percent_done = (index - 1) / total * 100
         percent_done = round(percent_done, 1)
 

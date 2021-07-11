@@ -7,6 +7,7 @@ from selenium import webdriver
 import os
 import sys
 import warnings
+from random import choice
 
 os.environ['WDM_LOG_LEVEL'] = '0'
 if not sys.warnoptions:
@@ -40,6 +41,18 @@ class Send:
         sleep(3)
 
 
+def get_message(path):
+    messages = []
+    book = load_workbook(file_name)
+    sheet = book.active
+    for i in range(2, sheet.max_row+1):
+        message = sheet.cell(i, 1).value
+        if message:
+            messages.append(message)
+
+    return messages
+
+
 def user_data():
     list_path = []
     book = load_workbook(file_name)
@@ -52,7 +65,7 @@ def user_data():
     return list_path
 
 
-def main(users_path, path):
+def main(users_path, path, messages):
     book = load_workbook(path)
     sheet = book.active
     num = 2
@@ -62,18 +75,23 @@ def main(users_path, path):
             url = sheet.cell(num, 3).value
             user_id = sheet.cell(num, 2).value
             if user_id:
-                self.send(message, url)
+                self.send(choice(messages), url)
                 print(num, i, user_id)
             num += 1
+            sleep(time_sleep)
         self.close()
 
 
 if __name__ == '__main__':
-    message = 'texts'
+    time_sleep = 10
     max_n = 10
     self = Send()
     file_name = 'user_data.xlsx'
+    path_message = 'messages.xlsx'
     lists = user_data()
-    main(lists, 'face -2021-07-06-15-10-16.xlsx')
+    list_messages = get_message(path_message)
+    if not len(list_messages):
+        list_messages = [input('- Enter Massage: '), ]
+    main(lists, 'face -2021-07-06-15-10-16.xlsx', list_messages)
 
     # self.open(r'C:\Users\3mora\AppData\Local\Google\Chrome\User Data', 'Profile 3')
