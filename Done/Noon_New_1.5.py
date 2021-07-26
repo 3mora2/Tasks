@@ -60,20 +60,17 @@ class NOON:
         By.XPATH,
         '//div[calss="btnWrapper"]/div[text()="Submit"] | //div[contains(@class,"showAlert")]//div[contains(@class,"solid")][2]')
 
-    #############################################
     URL_SEARCH = 'https://www.noon.com/saudi-en/'
     RATE_SELECTOR = (By.CSS_SELECTOR, 'div.detail_percentage')
     BRAND_SELECTOR = (By.CSS_SELECTOR, 'a > div.MCFyV')
     PRICE_SCRIPT = "return parseFloat(document.querySelector('.priceNow').textContent.replace('SAR',''));"
-    SELLER_TEXT_SELECTOR = (By.CSS_SELECTOR, 'a.storeLink')
+    SELLER_TEXT_SELECTOR = (By.CSS_SELECTOR, '[alt="seller"] + div a.storeLink')
     EXPRESS_SELECTOR = (By.CSS_SELECTOR, 'div.estimator_right > div > img')
     ALL_OFFER_SELECTOR = (By.CSS_SELECTOR, '.allOffers')
     S_PRICE_SELECTOR = (By.CSS_SELECTOR, 'div.regular > strong')
     S_SELLER_SELECTOR = (By.CSS_SELECTOR, '.soldby > strong')
     S_EXPRESS_SELECTOR = (By.CSS_SELECTOR, 'div[direction="row"] > div > img')
-    ####################################################################################################################
-    ####################################################################################################################
-    ####################################################################################################################
+
     SKU_TEXT_SELECTOR = (By.CSS_SELECTOR, 'div.tabsWrapper > div')
     SKU_INPUT_SELECTOR = (By.CSS_SELECTOR, 'input[name="partner_sku"]')
     SKU_BUTTON_SELECTOR = (By.CSS_SELECTOR, '.solid')
@@ -84,59 +81,49 @@ class NOON:
 
     def __init__(self, file_name):
         self.file_save = datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + file_name
+        self.book = load_workbook(file_name)
+        self.sheet = self.book.active
+        self.sheet[f'A1'] = 'Noon_SKU'
+        self.sheet[f'B1'] = 'Price'
+        self.sheet[f'C1'] = 'Quantity'
+        self.sheet[f'D1'] = 'Seller Name'
+        self.sheet[f'E1'] = 'Current Price'
+        self.sheet[f'F1'] = 'Express'
+        self.sheet[f'G1'] = 'Earn'
+        self.sheet[f'H1'] = 'New price'
+        self.sheet[f'I1'] = 'Status'
+        self.sheet[f'J1'] = 'Brand'
+        self.sheet[f'K1'] = 'Account'
+        self.sheet[f'L1'] = 'Minima Price'
+        self.sheet[f'M1'] = 'Change Value -'
+        self.sheet[f'N1'] = 'Exception'
+        self.sheet[f'O1'] = 'Quantity'
+        self.sheet[f'P1'] = 'Note 1'
+        self.sheet[f'Q1'] = 'Note 2'
+        self.sheet.column_dimensions['A'].width = 14
+        self.sheet.column_dimensions['B'].width = 15
+        self.sheet.column_dimensions['C'].width = 15
+        self.sheet.column_dimensions['D'].width = 15
+        self.sheet.column_dimensions['E'].width = 10
+        self.sheet.column_dimensions['F'].width = 14
+        self.sheet.column_dimensions['G'].width = 10
+        self.sheet.column_dimensions['H'].width = 11
+        self.sheet.column_dimensions['I'].width = 18
+        self.sheet.column_dimensions['J'].width = 30
+        self.sheet.column_dimensions['K'].width = 20
+        self.sheet.column_dimensions['L'].width = 16
+        self.sheet.column_dimensions['M'].width = 16
+        self.sheet.column_dimensions['N'].width = 16
+        self.sheet.column_dimensions['O'].width = 13
+        self.sheet.column_dimensions['P'].width = 85
+        self.sheet.column_dimensions['Q'].width = 50
 
         try:
-            self.book = load_workbook(file_name)
-            self.sheet = self.book.active
-        except Exception as err:
-            print(err)
-            exit()
-        self.load_file()
-        try:
-            self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        except:
-            print(traceback.print_exc())
             self.driver = webdriver.Chrome()
-        self.login()
-
-    def load_file(self):
-        try:
-            self.sheet[f'A1'] = 'Noon_SKU'
-            self.sheet[f'B1'] = 'Price'
-            self.sheet[f'C1'] = 'Quantity'
-            self.sheet[f'D1'] = 'Seller Name'
-            self.sheet[f'E1'] = 'Current Price'
-            self.sheet[f'F1'] = 'Express'
-            self.sheet[f'G1'] = 'Earn'
-            self.sheet[f'H1'] = 'New price'
-            self.sheet[f'I1'] = 'Status'
-            self.sheet[f'J1'] = 'Brand'
-            self.sheet[f'K1'] = 'Account'
-            self.sheet[f'L1'] = 'Minima Price'
-            self.sheet[f'M1'] = 'Change Value -'
-            self.sheet[f'N1'] = 'Exception'
-            self.sheet[f'O1'] = 'Quantity'
-            self.sheet[f'P1'] = 'Note 1'
-            self.sheet[f'Q1'] = 'Note 2'
-            self.sheet.column_dimensions['A'].width = 14
-            self.sheet.column_dimensions['B'].width = 15
-            self.sheet.column_dimensions['C'].width = 15
-            self.sheet.column_dimensions['D'].width = 15
-            self.sheet.column_dimensions['E'].width = 10
-            self.sheet.column_dimensions['F'].width = 14
-            self.sheet.column_dimensions['G'].width = 10
-            self.sheet.column_dimensions['H'].width = 11
-            self.sheet.column_dimensions['I'].width = 18
-            self.sheet.column_dimensions['J'].width = 30
-            self.sheet.column_dimensions['K'].width = 20
-            self.sheet.column_dimensions['L'].width = 16
-            self.sheet.column_dimensions['M'].width = 16
-            self.sheet.column_dimensions['N'].width = 16
-            self.sheet.column_dimensions['O'].width = 13
-            self.sheet.column_dimensions['P'].width = 85
-            self.sheet.column_dimensions['Q'].width = 50
         except:
-            pass
+            self.driver = webdriver.Chrome(ChromeDriverManager().install())
+
+        self.login()
 
     def login(self):
         try:
@@ -153,51 +140,51 @@ class NOON:
                     break
 
         except:
-            print(traceback.print_exc())
             print('- Login Error')
 
     @staticmethod
-    def price_count(price, express, earn):
-        if express:
-            p = (price * NoonCoinsExpress / 100)
+    def price_count(price_count, express_count, earn_count):
+        if express_count:
+            p = (price_count * NoonCoinsExpress / 100)
             if p > 6:
                 p = 6
             elif p < 2:
                 p = 2
         else:
-            p = (price * NoonCoinsNonExpr / 100)
+            p = (price_count * NoonCoinsNonExpr / 100)
             if p > 10:
                 p = 10
             elif p < 3:
                 p = 3
 
-        min_pr = price + (price * 9 / 100) + p + (price * float(earn) / 100)
+        min_pr = price_count + (price_count * 9 / 100) + p + (price_count * float(earn_count) / 100)
         return min_pr
 
     @staticmethod
-    def price_eran(price, your_price, express):
-        if express:
-            p = (your_price * NoonCoinsExpress / 100)
+    def price_eran(price_earn, your_price_earn, express_earn):
+        if express_earn:
+            p = (your_price_earn * NoonCoinsExpress / 100)
             if p > 6:
                 p = 6
             elif p < 2:
                 p = 2
         else:
-            p = (your_price * NoonCoinsNonExpr / 100)
+            p = (your_price_earn * NoonCoinsNonExpr / 100)
             if p > 10:
                 p = 10
             elif p < 3:
                 p = 3
 
-        earn = price - (your_price + (your_price * 9 / 100) + p)
+        earn = price_earn - (your_price_earn + (your_price_earn * 9 / 100) + p)
         return earn
 
-    def add_qu(self, q):
+    def add_qu(self, qu):
         sleep(1)
         try:
             WebDriverWait(self.driver, 6).until(
-                (ec.visibility_of_element_located(self.QUANTITY_INPUT_SELECTOR))).send_keys(str(q))
+                (ec.visibility_of_element_located(self.QUANTITY_INPUT_SELECTOR))).send_keys(str(qu))
         except:
+            print('- Create Q')
             try:
                 WebDriverWait(self.driver, 6).until(
                     (ec.visibility_of_element_located(self.QUANTITY_SITE_SELECTOR))).click()
@@ -206,22 +193,22 @@ class NOON:
                     (ec.visibility_of_all_elements_located(self.QUANTITY_SITE_CHOSE_SELECTOR)))[0].click()
                 sleep(1)
                 WebDriverWait(self.driver, 6).until(
-                    (ec.visibility_of_element_located(self.QUANTITY_INPUT_SELECTOR))).send_keys(str(q))
+                    (ec.visibility_of_element_located(self.QUANTITY_INPUT_SELECTOR))).send_keys(str(qu))
                 sleep(1)
             except:
-                print(traceback.print_exc())
+                # print(traceback.print_exc())
                 print('- Cant Change quantity')
 
-    def search_bar(self, code, url, add=False):
+    def search_bar(self, code_search, url, add=False):
         try:
             self.driver.get(url)
             sleep(1)
             try:
                 WebDriverWait(self.driver, 10).until(
                     (ec.visibility_of_element_located(self.SEARCH_INPUT_SELECTOR))).send_keys(
-                    code, Keys.ENTER)
-                WebDriverWait(self.driver, 10).until(
-                    (ec.visibility_of_element_located(self.SEARCH_INPUT_SELECTOR))).send_keys(Keys.ENTER)
+                    code_search, Keys.ENTER)
+                # WebDriverWait(self.driver, 10).until(
+                #     (ec.visibility_of_element_located(self.SEARCH_INPUT_SELECTOR))).send_keys(Keys.ENTER)
             except:
                 print('- Not found Bar')
                 return False
@@ -237,22 +224,33 @@ class NOON:
                 except:
                     return False
             else:
+                er = 0
+                while True:
+                    if len(self.driver.find_elements_by_css_selector('.sc-dkmKpi.lpsTSO')) > 0:
+                        sleep(1)
+                        er += 1
+                    else:
+                        break
+                    if code_search in WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
+                            (By.CSS_SELECTOR, 'tbody > tr:nth-child(1)'))).text:
+                        break
+
+                    if er == 60:
+                        break
+
                 try:
                     for i in range(3):
                         sleep(1)
-                        if code in WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
-                                (By.CSS_SELECTOR, 'tbody > tr:nth-child(1) > td:nth-child(5)'))).text or \
-                                code in WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
-                            (By.CSS_SELECTOR, 'tbody > tr:nth-child(1) > td:nth-child(4)'))).text or \
-                                code in WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
-                            (By.CSS_SELECTOR, 'tbody > tr:nth-child(1) > td:nth-child(6)'))).text:
+                        if code_search in WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
+                                (By.CSS_SELECTOR, 'tbody > tr:nth-child(1)'))).text:
                             print('- found')
-                            WebDriverWait(self.driver, 5).until(ec.visibility_of_element_located(
+                            WebDriverWait(self.driver, 5).until(ec.element_to_be_clickable(
                                 (By.CSS_SELECTOR, 'tbody > tr:nth-child(1) > td > a'))).click()
                             return True
                     print('- Not found')
                     return False
                 except:
+                    print(traceback.print_exc())
                     return 'ADD'
         except:
             print(traceback.print_exc())
@@ -471,7 +469,8 @@ class NOON:
                     if Offer_number == 0:
                         static = 'main_seller'
                         new_price = None
-                        yearn = self.price_eran(price=price, your_price=your_price, express=express_static)
+                        yearn = self.price_eran(price_earn=price, your_price_earn=your_price,
+                                                express_earn=express_static)
                         self.sheet[f'G{i}'] = yearn
                         if yearn < 0:
                             new_price = self.price_count(your_price, express, earn)
@@ -548,9 +547,9 @@ class NOON:
                 static = "Not found"
 
             if new_price is not None:
-                res = self.search_bar(code=bar, url=self.URL_CAT)
+                res = self.search_bar(code_search=bar, url=self.URL_CAT)
                 if res == 'ADD':
-                    res = self.search_bar(code=bar, url=self.URL_CAT_ADD, add=True)
+                    res = self.search_bar(code_search=bar, url=self.URL_CAT_ADD, add=True)
                     if not res:
                         continue
 
@@ -605,18 +604,18 @@ class NOON:
                     # self.add_active()
                     self.change_quantity(i)
                     sleep(2)
-                    # try:
-                    #     WebDriverWait(self.driver, 10).until(
-                    #         (ec.element_to_be_clickable(self.SAVE_CHANGE_SELECTOR))).click()
-                    #     sleep(1)
-                    #     WebDriverWait(self.driver, 10).until(
-                    #         (ec.visibility_of_element_located(self.SUBMIT_SELECTOR))).click()
-                    #     sleep(1)
-                    # except:
-                    #     self.sheet[f'Q{i}'].fill = PatternFill(fill_type='solid', fgColor='ff0000')
-                    #     self.sheet[f'Q{i}'] = 'Cant Save'
-                    #     print('Cant Save')
-                    #     print(traceback.print_exc())
+                    try:
+                        WebDriverWait(self.driver, 10).until(
+                            (ec.element_to_be_clickable(self.SAVE_CHANGE_SELECTOR))).click()
+                        sleep(1)
+                        WebDriverWait(self.driver, 10).until(
+                            (ec.visibility_of_element_located(self.SUBMIT_SELECTOR))).click()
+                        sleep(1)
+                    except:
+                        self.sheet[f'Q{i}'].fill = PatternFill(fill_type='solid', fgColor='ff0000')
+                        self.sheet[f'Q{i}'] = 'Cant Save'
+                        print('Cant Save')
+                        print(traceback.print_exc())
 
             for column in range(1, 18):
                 try:
@@ -638,7 +637,10 @@ class NOON:
                 self.sheet[f'H{i}'].fill = PatternFill(fill_type='solid', fgColor='FF9999')
             self.sheet[f'I{i}'] = static
             self.sheet[f'P{i}'] = Note
-
+            try:
+                self.sheet[f'R{i}'] = main_seller in seller
+            except:
+                pass
             self.book.save(self.file_save)
             print(f'- {i} - {bar} > seller : {seller}, price : {price}, new price : {new_price}')
             if thr.p == 'pause' or thr.p == 'p':

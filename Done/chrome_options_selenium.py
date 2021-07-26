@@ -57,3 +57,37 @@ wd = webdriver.Chrome(
 # fp = webdriver.FirefoxProfile(
 #     r'C:\Users\3mora\AppData\Roaming\Mozilla\Firefox\Profiles\63z4wsqh.default-release')
 # self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_profile=fp)
+# self.user_data = os.path.expanduser("~") + r'\AppData\Local\Google\Chrome\User Data'
+# try:
+#     pros = subprocess.Popen(
+#         '"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"'
+#         rf' --user-data-dir="{self.user_data}" '
+#         ' --remote-debugging-port=9222')
+# except:
+#     pros = subprocess.Popen(
+#         '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"'
+#         rf' --user-data-dir="{self.user_data}"'
+#         '  --remote-debugging-port=9222')
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('--no-sandbox')
+# chrome_options.add_argument('--disable-gpu')
+# chrome_options.add_argument("--disable-infobars")
+# chrome_options.add_argument("--disable-notifications")
+# chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+# # self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
+
+# options = Options()
+# options.add_argument('--no-sandbox')
+# options.add_argument('--disable-dev-shm-usage')
+# options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Safari/605.1.15')
+# options.add_argument('--disable-plugins-discovery')
+# options.add_argument('referer=https://www.google.com/')
+# options.add_argument('excludeSwitches', ['enable-automation'])
+# options.add_argument('--disable-extensions')
+# options.add_argument('--profile-directory=Default')
+# options.add_argument('--disable-blink-featuresi=AutomationControlled')
+#
+# profile.set_preference('excludeSwitches', 'enable-automation')
+# profile.set_preference("dom.webdriver.enabled", False)
+# profile.set_preference('useAutomationExtension', False)
+# profile.update_preferences()

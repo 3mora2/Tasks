@@ -206,7 +206,7 @@ class Upload:
             sleep(2)
             WebDriverWait(self.driver, 10).until((ec.visibility_of_element_located(self.SEARCH_INPUT_SELECTOR))
                                                  ).send_keys(name, Keys.ENTER)
-            sleep(2)
+            sleep(6)
         except:
             if 'login.noon.partners' in self.driver.current_url:
                 self.login()
@@ -217,16 +217,16 @@ class Upload:
                 sleep(2)
                 WebDriverWait(self.driver, 10).until((ec.visibility_of_element_located(self.SEARCH_INPUT_SELECTOR))
                                                      ).send_keys(name, Keys.ENTER)
-                sleep(2)
+                sleep(6)
             except:
                 sleep(10)
                 print(traceback.print_exc())
                 return False
 
     def add_serial(self, serial):
-        sleep(1)
+        sleep(4)
         try:
-            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located(self.FIRST_ELEMENT_SELECTOR)).click()
+            WebDriverWait(self.driver, 60).until(ec.visibility_of_element_located(self.FIRST_ELEMENT_SELECTOR)).click()
             sleep(4)
         except:
             print('- Not found')

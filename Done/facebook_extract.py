@@ -98,6 +98,8 @@ if __name__ == '__main__':
     self = CollectPosts()
     self.load_old_data('old.xlsx')
     self.mobile_start('https://www.facebook.com/IQmedch/')
+
+    
 '''
 اريد 500 من هذه الصفحة
 https://www.facebook.com/IQmedch/

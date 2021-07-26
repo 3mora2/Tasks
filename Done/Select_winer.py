@@ -1,14 +1,35 @@
+import os
+
+import requests
+
+from openpyxl import Workbook, load_workbook
 from datetime import datetime
 from time import sleep
 import requests
 import json
 import random
+from random import choice
+
+headers_and = {
+    'User-Agent': 'Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)',
+    'Connection': 'close', 'Accept': '*/*', 'Accept-Language': 'en-US', 'Accept-Encoding': 'gzip, deflate',
+    'X-IG-Capabilities': '3brTvw==', 'X-IG-Connection-Type': 'WIFI', 'X-IG-Connection-Speed': '4932kbps',
+    'X-IG-App-ID': '567067343352427', 'X-IG-Bandwidth-Speed-KBPS': '-1.000', 'X-IG-Bandwidth-TotalBytes-B': '0',
+    'X-IG-Bandwidth-TotalTime-MS': '0', 'X-FB-HTTP-Engine': 'Liger'}
 
 
 class Insta:
     def __init__(self):
         print('''- please wait while starting........''')
-        self.session = self.login(username='ebrahemelmorsy22001@gmail.com', password='ammar2020')
+        self.session1 = self.login(username='201028946519', password='ammar2020')
+        sleep(1)
+        self.session2 = self.login(username='ebrahemelmorsy22001@gmail.com', password='ammar2020')
+        sleep(1)
+        self.session3 = self.login(username='ebrahemelmorsy22002@gmail.com', password='ammar2020')
+
+        # self.book = Workbook()
+        # self.sheet = self.book.active
+        # self.cur = 2
 
     def login(self, username, password):
         session = requests.Session()
@@ -128,7 +149,104 @@ class Insta:
 
         print(f'- ⏳ {total}\\{index - 1} - [{done_str}{togo_str}] {data} ({percent_done} %)', end='\r')
 
+    def extract_all_posts(self, username):
+        r = self.session3.get('https://www.instagram.com/{0}/?__a=1'.format(username))
+        user_id = r.json()['graphql']['user']['id']
+        #######################################
+        end_cursor = ''
+        next_page = True
 
-if __name__ == '__main__':
-    inst = Insta()
-    inst.get_likes()
+        while next_page:
+            session = choice([self.session3, self.session1, self.session2])
+            r = session.get('https://www.instagram.com/graphql/query/',
+                                  params={'query_id': '17880160963012870', 'id': user_id, 'first': 12*4,
+                                          'after': end_cursor})
+            o = r.json()
+            graphql = o['data']
+            for edge in graphql['user']['edge_owner_to_timeline_media']['edges']:
+                shortcode = edge['node']['shortcode']
+                url1 = 'https://www.instagram.com/p/{0}/'.format(shortcode)
+                self.sheet.cell(self.cur, 5).value = url1
+                print(self.cur)
+                self.cur += 1
+                # self.Download(url1)
+
+            end_cursor = graphql['user']['edge_owner_to_timeline_media']['page_info']['end_cursor']
+            next_page = graphql['user']['edge_owner_to_timeline_media']['page_info']['has_next_page']
+            # sleep(5)
+        self.book.save('final_posts.xlsx')
+
+    def open(self):
+        self.book = load_workbook('final_posts_1.xlsx')
+        self.sheet = self.book.active
+        for i in range(2, self.sheet.max_row+1):
+            url = self.sheet.cell(i, 5).value
+            if url and not self.sheet.cell(i, 2).value:
+                self.Download(url, i)
+
+        self.book.save('final_posts_1.xlsx')
+
+    def Download(self, url, i):
+        img = []
+        vi = []
+        url = str(url) + '?__a=1'
+        print(url)
+        session = choice([self.session3, self.session1])#, self.session2])
+        session.headers.update(headers_and)
+        self.r = re = session.get(url)  # B_XP3L_pjjl   B_B4QNUhOUp CAfbugFAw5o
+        o = re.json()
+        dsk = '\n'.join([i['node']['text'] for i in o['graphql']['shortcode_media']['edge_media_to_caption']['edges']])
+        if o['graphql']['shortcode_media']['__typename'] == 'GraphSidecar':
+            for edge in o['graphql']['shortcode_media']['edge_sidecar_to_children']['edges']:
+                if edge['node']['is_video']:
+                    pass
+                    # video_url = edge['node']['video_url']
+                    # vi.append(video_url)
+                else:
+                    display_url = edge['node']['display_url']
+                    img.append(display_url)
+        # elif o['graphql']['shortcode_media']['__typename'] == 'GraphVideo':
+        #     video_url = o['graphql']['shortcode_media']['video_url']
+        #     vi.append(video_url)
+
+        elif o['graphql']['shortcode_media']['__typename'] == 'GraphImage':
+            display_url = o['graphql']['shortcode_media']['display_url']
+            img.append(display_url)
+        print(i)
+        self.sheet.cell(i, 1).value = dsk
+        self.sheet.cell(i, 2).value = ','.join(img)
+        sleep(4)
+        # self.sheet.cell(i, 3).value = ','.join(vi)
+
+
+# if __name__ == '__main__':
+    # inst = Insta()
+    # inst.open()
+    # inst.extract_all_posts('camelcorners')
+    # inst.get_likes()
+# https://www.instagram.com/camelcorners/
+import requests_html
+s = requests_html.HTMLSession()
+n = 0
+l = []
+book = load_workbook('final_posts_1.xlsx')
+sheet = book.active
+for i in range(2, sheet.max_row+1):
+    url = sheet.cell(i, 2).value
+    if url:# and sheet.cell(i, 1).value:3686 2584 4541
+        code = sheet.cell(i, 5).value.split('/')[4]
+        for n, u in enumerate(url.split(',')):
+            if n == 2:
+                break
+            if u in l:
+                print('- found')#1045
+                continue
+
+            l.append(u)
+            print(l.__len__())
+            if os.path.isfile(f'img/{code}-{i}-{n}.jpg'):
+                continue
+            with open(f'img/{code}-{i}-{n}.jpg', 'wb') as f:
+                print('add')
+                r = s.get(u, headers=headers_and)
+                f.write(r.content)

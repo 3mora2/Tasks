@@ -145,3 +145,18 @@ www.noon.com/saudi-ar/electronics-and-mobiles/mobiles-and-accessories/mobiles-20
 قائمة بالجوالات الحديثه وجديده وليست مجددة خلال سنتين من مختلف الشركات فقط
 
 """
+
+
+await fetch("https://www.noon.com/saudi-ar/grand-theft-auto-v-premium-edition-4-5/N30107462A/p", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Upgrade-Insecure-Requests": "1",
+        "If-None-Match": "\"87e1f-tVq80X0/pWjsMnYEX0dYJGGGbns\"",
+        "Cache-Control": "max-age=0"
+    },
+    "method": "GET",
+    "mode": "cors"
+});

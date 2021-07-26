@@ -1,3 +1,5 @@
+import json
+
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -41,7 +43,7 @@ class SouCode:
         url = self.driver.current_url
         if all_type is False:
             url = url.replace('status=all', 'status=returned') if 'status=' in url else url + '&status=returned'
-        url = url.replace('limits=20', 'limits=100') if 'limits=' in url else url+'&limits=100'
+        url = url.replace('limits=20', 'limits=60') if 'limits=' in url else url+'&limits=60'
         print(url)
         self.driver.get(url)
         sleep(5)
@@ -135,8 +137,17 @@ class SouCode:
 
 
 if __name__ == "__main__":
-    email = input('- Enter your email : ')
-    password = input('- Enter your password : ')
+    try:
+        with open('File') as f:
+            text = f.read()
+        text = json.loads(text)
+
+        email = text['EMAIL']
+        password = text['PASSWORD']
+    except Exception as e:
+        email = input('- Enter your email : ')
+        password = input('- Enter your password : ')
+
     vol = float(input('- Enter value (+) : '))
     type_se = input('- Enter (1 ----> All) Or (2 ----> Returned) : ')
     l = []
