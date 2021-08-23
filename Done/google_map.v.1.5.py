@@ -46,7 +46,7 @@ class Thread(threading.Thread):
 
     def run(self):
         while True:
-            self.p = input()
+            self.p = input('- break: ')
             if self.p == 's':
                 break
 
@@ -87,7 +87,8 @@ class Main:
         self.sheet['H1'] = 'Phone'
         self.sheet['I1'] = 'Website'
         self.sheet['J1'] = "IMG"
-        self.sheet['K1'] = "URL"
+        self.sheet['K1'] = "Opened"
+        self.sheet['L1'] = "URL"
 
         self.sheet.column_dimensions['B'].width = 50
         self.sheet.column_dimensions['C'].width = 30
@@ -98,8 +99,9 @@ class Main:
         self.sheet.column_dimensions['H'].width = 25
         self.sheet.column_dimensions['I'].width = 30
         self.sheet.column_dimensions['J'].width = 50
-        self.sheet.column_dimensions['K'].width = 120
-        for column in range(1, 11):
+        self.sheet.column_dimensions['K'].width = 50
+        self.sheet.column_dimensions['L'].width = 120
+        for column in range(1, 12):
             try:
                 self.sheet.cell(1, column).alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
             except:
@@ -232,7 +234,10 @@ class Main:
                             ':')[-1]
                 except:
                     cont = None
-
+                try:
+                    opened = self.driver.find_element_by_xpath("//div[contains(@jsaction, 'pane.openhours')]").text
+                except:
+                    opened = None
                 if save_web != '1':
                     try:
                         if len(self.driver.find_elements_by_xpath(
@@ -270,7 +275,8 @@ class Main:
                 if save_web == '1':
                     self.sheet[f'I{num}'] = web
                 self.sheet[f'J{num}'] = main_photo
-                self.sheet[f'K{num}'] = url
+                self.sheet[f'K{num}'] = opened
+                self.sheet[f'L{num}'] = url
 
                 for column in range(2, 11):
                     try:
@@ -284,12 +290,13 @@ class Main:
                 num += 1
             except Exception as e:
                 pass
-            self.book.save('final_all.xlsx')
+            # self.book.save('final_all.xlsx')
         print('- Done....', end='\r')
         try:
             self.book.save(f'{sear}.xlsx')
         except:
             self.book.save('Result.xlsx')
+        thr.p = 's'
         self.driver.quit()
 
 
@@ -324,3 +331,30 @@ if __name__ == '__main__':
         elif init == '3':
             self.extract()
             break
+'''
+١- جدة
+٢- جازان
+٣- الرياض
+٤- الخبر
+٥- حائل
+٦- تبوك
+٧- ابها
+
+ولكن بالشروط ان تشتمل البيانات على التالي:
+١- الاسم
+٢- المدينة
+٣- رقم التواصل
+٤- الويبسايت ان وجد
+٥- الايميل ان وجد
+
+كذلك يتم تنسيق المدينة لحالها لتسهيل التصفية دون العنوان الدقيق
+
+شريطة ان تكون الشركة قائمة وتعمل وليست مغلقة
+
+البيانات للشركات فقط وليس للمحال التجارية
+
+مثال:
+
+ابحث في google maps عن ( شركة جدة القابضة)
+
+'''

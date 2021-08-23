@@ -225,28 +225,63 @@ class Insta:
     # inst.extract_all_posts('camelcorners')
     # inst.get_likes()
 # https://www.instagram.com/camelcorners/
-import requests_html
-s = requests_html.HTMLSession()
-n = 0
-l = []
-book = load_workbook('final_posts_1.xlsx')
-sheet = book.active
-for i in range(2, sheet.max_row+1):
-    url = sheet.cell(i, 2).value
-    if url:# and sheet.cell(i, 1).value:3686 2584 4541
-        code = sheet.cell(i, 5).value.split('/')[4]
-        for n, u in enumerate(url.split(',')):
-            if n == 2:
-                break
-            if u in l:
-                print('- found')#1045
-                continue
-
-            l.append(u)
-            print(l.__len__())
-            if os.path.isfile(f'img/{code}-{i}-{n}.jpg'):
-                continue
-            with open(f'img/{code}-{i}-{n}.jpg', 'wb') as f:
-                print('add')
-                r = s.get(u, headers=headers_and)
-                f.write(r.content)
+# import requests_html
+# s = requests_html.HTMLSession()
+# n = 0
+# l = []
+# book = load_workbook('final_posts_1.xlsx')
+# sheet = book.active
+# book_new = Workbook()
+# sheet_new = book_new.active
+# for i in range(2, sheet.max_row+1):
+#     url = sheet.cell(i, 2).value
+#     if url:# and sheet.cell(i, 1).value:3686 2584 4541
+#         code = sheet.cell(i, 5).value.split('/')[4]
+#         for n, u in enumerate(url.split(',')):
+#             if n == 2:
+#                 break
+#             if u in l:
+#                 print('- found')#1045
+#                 continue
+#
+#             l.append(u)
+#             print(l.__len__())
+#             if os.path.isfile(f'img/{code}-{i}-{n}.jpg'):
+#                 continue
+#             with open(f'img/{code}-{i}-{n}.jpg', 'wb') as f:
+#                 print('add')
+#                 r = s.get(u, headers=headers_and)
+#                 f.write(r.content)
+# dict_ = dict()
+# for file in os.listdir(r'E:\New folder\3bdo\img bcg remover'):
+#     f = file.split('.')[0].split('-')
+#     c = int(f[-1])
+#     r = int(f[-2])
+#     code = '-'.join(f[:-2])
+#     if not sheet_new.cell(r, 1).value == sheet.cell(r, 1).value:
+#         for i in range(1, sheet.max_column+1):
+#             sheet_new.cell(r, i).value = sheet.cell(r, i).value
+#     sheet_new.cell(r, 20+c).value = file
+#     print(r)
+#
+# book_new.save('test.xlsx')
+# book = load_workbook('test.xlsx')
+# sheet = book.active
+# nn = 0
+# for i in range(2, sheet.max_row+1):
+#     if sheet.cell(i, 4).value:#and not sheet.cell(i, 5).value:
+#         # print(sheet.cell(i, 4).value)
+#         try:
+#             if os.path.exists(rf'E:\New folder\3bdo\img bcg remover\{sheet.cell(i, 4).value.replace("-0.png","-1.png")}'):
+#                 sheet.cell(i, 5).value = sheet.cell(i, 4).value.replace("-0.png","-1.png")
+#             else:
+#                 sheet.cell(i, 5).value = None
+#             # with open(rf'E:\New folder\img\{sheet.cell(i, 3).value.replace("-0.png","-1.jpg")}', 'rb') as fr:
+#             #     with open(rf'im\{sheet.cell(i, 3).value.replace("-0.png","-1.jpg")}', 'wb') as fw:
+#             #         fw.write(fr.read())
+#             nn += 1
+#         except:
+#             continue
+#
+#     # print(nn)
+# book.save('test.xlsx')

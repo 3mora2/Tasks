@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import os
 import pandas as pd
+from webdriver_manager.firefox import GeckoDriverManager
 
 
 def print_percent_done(index, total, bar_len=50):
@@ -24,17 +25,33 @@ def print_percent_done(index, total, bar_len=50):
 class CollectPosts(object):
     def __init__(self):
         print('- Start')
-        self.drivers = set()
-        self.user_data = os.path.expanduser("~") + r'\AppData\Local\Google\Chrome\User Data'
-        chrome_options = Options()
-        chrome_options.add_argument("--disable-infobars")
-        chrome_options.add_argument("--disable-notifications")
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--disable-plugins')
-        chrome_options.add_argument('--disable-popup-blocking')
-        chrome_options.add_argument(f"--user-data-dir={self.user_data}")
-        self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
+        try:
+            path = os.path.expanduser("~") + '\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles'
+            for file in os.listdir(path):
+                if 'default-release' in file:
+                    prof = file
+                    break
+            user_data = os.path.expanduser(
+                "~") + f'\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\{prof}'  # r'C:\Users\3mora\AppData\Roaming\Mozilla\Firefox\Profiles\63z4wsqh.default-release'
+            fp = webdriver.FirefoxProfile(user_data)
+            options = webdriver.FirefoxOptions()
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-setuid-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--disable-gpu')
+            self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_profile=fp,
+                                            options=options)
+        except:
+            self.user_data = os.path.expanduser("~") + r'\AppData\Local\Google\Chrome\User Data'
+            chrome_options = Options()
+            chrome_options.add_argument("--disable-infobars")
+            chrome_options.add_argument("--disable-notifications")
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('--disable-plugins')
+            chrome_options.add_argument('--disable-popup-blocking')
+            chrome_options.add_argument(f"--user-data-dir={self.user_data}")
+            self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
         self.driver.maximize_window()
         self.driver.get('https://web.mobeasy.com/#/')
 

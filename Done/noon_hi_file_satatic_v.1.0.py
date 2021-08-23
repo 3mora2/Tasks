@@ -153,7 +153,8 @@ class Main:
                         for product in products:
                             static = product['psku']['isActive']
                             code = product['psku']['partnerSku']
-                            dict_noon[code] = static
+                            express = True if product['fbnStock'] else False
+                            dict_noon[code] = {'static': static, 'express': express}
                         print(len(dict_noon))
                     except Exception as e:
                         print(e)
@@ -182,23 +183,45 @@ class Main:
         for code in data_noon.keys():
             if thr.p == 's':
                 break
-            if data_noon[code] == 0 and data_ih.get(code, ) == 'InStock':
+            if data_noon[code]['express']:
+                continue
+
+            if code not in data_ih.keys():
+                print('- Code Not in Data ih ')
+                s = HTMLSession()
+                cookie = {'name': 'iher-pref1',
+                          'value': 'storeid=0&sccode=SA&lan=en-US&scurcode=SAR&wp=2&lchg=1&ifv=1&accsave=0'}
+                s.cookies.set(cookie['name'], cookie['value'])
+                try:
+                    r = s.get('https://sa.iherb.com/search?kw=' + code)
+                    static = r.html.find('#stock-status')[0].text
+                    if 'متوفر حاليا' in static or 'In Stock' in static:
+                        data_ih[code] = 'InStock'
+                    else:
+                        data_ih[code] = 'OutStock'
+                    print(code, data_ih[code])
+                except:
+                    pass
+
+            if data_noon[code]['static'] == 0 and data_ih.get(code, ) == 'InStock':
                 action = self.ACTIVE_SCRIPT
                 static = True
-            elif data_noon[code] == 1 and data_ih.get(code, ) == 'OutStock':
+            elif data_noon[code]['static'] == 1 and data_ih.get(code, ) == 'OutStock':
                 if code in story and story[code] > 0:
                     action = self.ACTIVE_SCRIPT
                     static = True
                 else:
                     action = self.DEACTIVATE_SCRIPT
                     static = False
+
             else:
                 continue
-            print(n, code, data_ih.get(code, ), data_noon[code], static)
+            print(n, code, data_ih.get(code, ), data_noon[code]['static'], static)
             sheet.cell(n, 1).value = code
-            sheet.cell(n, 2).value = data_noon[code]
+            sheet.cell(n, 2).value = data_noon[code]['static']
             sheet.cell(n, 3).value = data_ih.get(code, )
             sheet.cell(n, 4).value = static
+
             result_add = self.add_new(code)
             if result_add:
                 if static:
@@ -335,6 +358,8 @@ if __name__ == "__main__":
 
 # pyinstaller --add-data C:/Users/3mora/AppData/Local/Programs/Python/Python39/Lib/site-packages/pyppeteer-0.2.5.dist-info;pyppeteer-0.2.5.dist-info
 '''
+bekj.119@gmail.com
+
 perfect203070@gmail.com
 Mm0987654
 '''

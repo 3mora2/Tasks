@@ -99,7 +99,7 @@ class Carrefour:
                 self.sheet.cell(row=num + 2, column=1).value = name
                 self.sheet.cell(row=num + 2, column=2).value = brand
                 self.sheet.cell(row=num + 2, column=3).value = category
-                self.sheet.cell(row=num + 2, column=4).value = discount if discount else price
+                self.sheet.cell(row=num + 2, column=4).value = discount
                 self.sheet.cell(row=num + 2, column=5).value = price
                 self.sheet.cell(row=num + 2, column=6).value = supplier
                 self.sheet.cell(row=num + 2, column=7).value = product_url
@@ -193,8 +193,9 @@ class LuluhyperMarket:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('blink-settings=imagesEnabled=false')
+        # chrome_options.add_argument('blink-settings=imagesEnabled=false')
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
+        self.driver.maximize_window()
         self.book = Workbook()
         self.sheet = self.book.active
         self.sheet.cell(row=1, column=1).value = 'Name'
@@ -221,18 +222,32 @@ class LuluhyperMarket:
         list_u = []
         self.driver.get(url)
         sleep(3)
+        n = 0
         while True:
-            for element in self.driver.find_elements_by_css_selector('.product-tile-main a.js-gtm-product-link'):
+            # for element in self.driver.find_elements_by_css_selector('.product-tile-main a.js-gtm-product-link'):
+            for element in self.driver.find_elements_by_css_selector('.product-img > a.js-gtm-product-link'):
                 if element.get_attribute('href') in list_u:
                     continue
                 list_u.append(element.get_attribute('href'))
 
             print('total:', len(list_u))
-            try:
-                self.driver.get(self.driver.find_element_by_css_selector('a[rel="next"]').get_attribute('href'))
+            if len(self.driver.find_elements_by_css_selector('#loaderonplp')) > 0:
+                if 'd-none' not in self.driver.find_element_by_css_selector('#loaderonplp').get_attribute('class'):
+                    sleep(1)
+                    continue
                 sleep(1)
-            except:
-                break
+                if n == len(self.driver.find_elements_by_css_selector('.product-img > a.js-gtm-product-link')):
+                    break
+                n = len(self.driver.find_elements_by_css_selector('.product-img > a.js-gtm-product-link'))
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                sleep(2)
+            else:
+                try:
+                    self.driver.get(self.driver.find_element_by_css_selector('a[rel="next"]').get_attribute('href'))
+                    sleep(1)
+                except Exception as e:
+                    print(e)
+                    break
 
         for num, link in enumerate(list_u):
             self.driver.get(link)
@@ -242,9 +257,13 @@ class LuluhyperMarket:
                                                                                                          '').replace(
                     ':', '').strip()
             except:
-                brand = None
+                try:
+                    # brand = self.driver.find_element_by_css_selector('.product-name > span').text
+                    brand = self.driver.find_element_by_css_selector('[property="product:brand"]').get_attribute('content')
+                except:
+                    brand = None
             try:
-                cat = self.driver.find_elements_by_css_selector('#plp-breadcrum li a')[-1].text
+                cat = self.driver.find_elements_by_css_selector('nav>ol>li>a')[-1].text
             except:
                 cat = None
             try:
@@ -252,7 +271,8 @@ class LuluhyperMarket:
             except:
                 old_price = None
             try:
-                price = self.driver.find_elements_by_css_selector('.prod-price > ul > li > span')[-1].text
+                # price = self.driver.find_elements_by_css_selector('.prod-price > ul > li > span')[-1].text
+                price = self.driver.find_element_by_css_selector('[property="product:price:amount"]').get_attribute('content')
             except:
                 price = None
             self.sheet.cell(row=num + 2, column=1).value = title
@@ -260,7 +280,7 @@ class LuluhyperMarket:
             self.sheet.cell(row=num + 2, column=3).value = cat
             self.sheet.cell(row=num + 2, column=4).value = price
             self.sheet.cell(row=num + 2, column=5).value = old_price
-            self.sheet.cell(row=num + 2, column=6).value = url
+            self.sheet.cell(row=num + 2, column=6).value = link
             for column in range(1, 7):
                 try:
                     self.sheet.cell(num + 2, column).alignment = Alignment(horizontal='center', vertical='center',
@@ -332,8 +352,8 @@ class Danube:
                     old_price = None
                 self.sheet.cell(row=num + 2, column=1).value = title
                 self.sheet.cell(row=num + 2, column=2).value = cat
-                self.sheet.cell(row=num + 2, column=3).value = price
-                self.sheet.cell(row=num + 2, column=4).value = old_price
+                self.sheet.cell(row=num + 2, column=3).value = price if old_price else None
+                self.sheet.cell(row=num + 2, column=4).value = old_price if old_price else price
                 self.sheet.cell(row=num + 2, column=5).value = url
 
                 for column in range(1, 7):
@@ -393,3 +413,4 @@ if __name__ == '__main__':
 
 # pyinstaller --add-data C:/Users/3mora/AppData/Local/Programs/Python/Python39/Lib/site-packages/pyppeteer-0.2.5.dist-info;pyppeteer-0.2.5.dist-info
 # pyinstaller --add-data c:\users\3mora\anaconda3\envs\autoenv\lib\site-packages\pyppeteer-0.2.5.dist-info;pyppeteer-0.2.5.dist-info
+'https://www.luluhypermarket.com/en-saBreakfast%20&%20Spreads/c/HY00214912'

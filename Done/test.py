@@ -1,114 +1,72 @@
-import os
-from requests_html import HTMLSession
 from selenium import webdriver
+from openpyxl import load_workbook, Workbook
 from webdriver_manager.chrome import ChromeDriverManager
-from openpyxl import Workbook, load_workbook
-from time import sleep
-os.environ['WDM_LOG_LEVEL'] = '0'
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
+wb = load_workbook("D:/work.xlsx")
+ws = wb.active
 
-# driver.get('https://madaresegypt.com/ar/Results/%D8%AD%D8%B6%D8%A7%D9%86%D8%A7%D8%AA/%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9/%D8%AE%D8%A7%D8%B5%D8%A9?page=1')
-# driver.find_elements_by_css_selector('div.block-heading > h4 > a')
-book = load_workbook('مدارس-مدينة-الجيزة-خاصة.xlsx')
+book = Workbook()
 sheet = book.active
-num = 1
-sheet[f'A{num}'].value = 'الاسم'
-sheet[f'B{num}'].value = "رقم الهاتف"
-sheet[f'C{num}'].value = "البريد الالكتروني"
-sheet[f'D{num}'].value = "رابط الموقع"
-sheet[f'E{num}'].value = "رابط الخريطه"
-sheet[f'F{num}'].value = "رابط الفيسبوك"
-sheet[f'G{num}'].value = "العنوان"
-sheet[f'H{num}'].value = "معلومات عن "
-sheet[f'I{num}'].value = "خصائص"
-sheet[f'J{num}'].value = "المميزات"
-sheet[f'K{num}'].value = "الصور"
-for num in range(2, sheet.max_row + 1):
+row = 2
+for a in range(1, ws.max_row+1):
+    url = ws.cell(row=a, column=1).value
+    if not url:
+        continue
+    # for url in ['https://www.autopartsco.com.au/efs-elite-lift-kit-mitsubishi-pajero-nm-nw-05-2000',
+    #             'https://www.autopartsco.com.au/hpd-upgraded-front-mount-intercooler-mitsubishi-pa~17252',
+    #             'https://www.autopartsco.com.au/tough-dog-40mm-lift-kit-mitsubishi-pajero-nh-nl-5',
+    #             'https://www.autopartsco.com.au/fuel-manager-diesel-pre-filter-kit-mitsubishi-paje'
+    #             ]:
+    next_row = row+1
+    driver.get(url)
+    category = driver.find_element_by_xpath('//*[@id="main-content"]/div/div/nav/ol/li[2]/a/span').text
+    name = driver.find_element_by_xpath('//*[@id="_jstl__header_r"]/div/div[1]/h1').text
+    price = driver.execute_script("return document.querySelector('.productprice.productpricetext').textContent;").strip()
+    # price = driver.find_element_by_css_selector('.productprice.productpricetext').text
+    desc = driver.find_element_by_xpath('//*[@id="description"]').get_attribute("outerHTML")
+    desc2 = driver.find_element_by_xpath('//*[@id="description"]').get_attribute("innerHTML")
+
     try:
-        # if num == 100:
-        #     break
-        url = sheet[f'Z{num}'].value
-        if url is None:
-            continue
-        print(num)
-        driver.get(url)
-        sleep(2)
-        name = driver.find_element_by_css_selector('.page-title > a:nth-child(1)').text
-        add = driver.find_element_by_css_selector('.col_right > div.contact_info div:nth-child(1)').text.split('\n')
-        add.pop(0)
-        address = ' '.join(add)
-        try:
-            number = driver.find_element_by_css_selector('.col_right > div.contact_info > div > div:nth-child(2) ').text
-        except:
-            number = None
-        try:
-            mail = driver.find_element_by_css_selector('#middle > div > div > div > div > div:nth-child(5) > span').text
-        except:
-            mail = None
-        try:
-            face = driver.find_element_by_css_selector(' div.row.facebook > a').get_attribute('href')
-        except:
-            face = None
-        try:
-            web = driver.find_element_by_css_selector(' div.row.website > a').get_attribute('href')
-        except:
-            web = None
-        try:
-            Map = driver.find_element_by_css_selector('div.single-property h3:nth-child(2) > a').get_attribute('href')
-        except:
-            Map = None
-        try:
-            about = driver.find_element_by_css_selector(
-                'div.single-property > div.Editor-body > div.blog-post-body > div.editor-item').text
-        except:
-            about = None
-        try:
-            Property = driver.find_element_by_css_selector('div.single-property > div.agent > div > div.col-md-8').text
-        except:
-            Property = None
-
-        try:
-            mom = driver.find_element_by_css_selector('.additional-amenities').text
-        except:
-            mom = None
-        img = '\n '.join([im.get_attribute('src').replace('_thumb', '') for im in
-                              driver.find_elements_by_css_selector('#grid > div > img')])
-        sheet[f'A{num}'].value = name
-        sheet[f'B{num}'].value = number
-        sheet[f'C{num}'].value = mail
-        sheet[f'D{num}'].value = web
-        sheet[f'E{num}'].value = Map
-        sheet[f'F{num}'].value = face
-        sheet[f'G{num}'].value = address
-        sheet[f'H{num}'].value = about
-        sheet[f'I{num}'].value = Property
-        sheet[f'J{num}'].value = mom
-        sheet[f'K{num}'].value = img
+        sku = driver.execute_script(
+                "return document.evaluate('//tr[td/strong[text()=\"SKU\"]]/td[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText;")
     except:
-        pass
-book.save('مدارس-مدينة-الجيزة-خاصة.xlsx')
+        sku = None
 
-# da['Z1'] = 'URL'
-# address = driver.find_element_by_css_selector('#middle > div > div > div > div > div:nth-child(1)').text
-# phone = driver.find_element_by_css_selector('#middle > div > div > div > div > div:nth-child(4) > div:nth-child(2) > a').text
-# phone_tow = driver.find_element_by_css_selector('#middle > div > div > div > div > div:nth-child(4) > div:nth-child(2)').text
-# from selenium import webdriver
-# from webdriver_manager.chrome import ChromeDriverManager
-# from openpyxl import Workbook
-#
-# driver = webdriver.Chrome(ChromeDriverManager().install())
-#
-# book = Workbook()
-# sheet = book.active
-# i = 1
-# n = 2
-# while i != 23:
-#     driver.get(
-#         f'https://madaresegypt.com/ar/Results/%D9%85%D8%AF%D8%A7%D8%B1%D8%B3/%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9/%D8%AE%D8%A7%D8%B5%D8%A9?page={i}')
-#     for el in driver.find_elements_by_css_selector('div.block-heading > h4 > a'):
-#         sheet[f'Z{n}'] = el.get_attribute("href")
-#         n += 1
-#     print(n)
-#     i += 1
-# book.save("مدارس-مدينة-الجيزة-خاصة.xlsx")
+    sheet.cell(row, 1).value = url
+    sheet.cell(row, 3).value = name
+    sheet.cell(row, 4).value = category
+    sheet.cell(row, 6).value = desc2
+
+    column = 8
+    for option in driver.find_elements_by_css_selector('#extra-options-table > tbody > tr')[1:]:
+        row_ = row
+        name_option = option.find_element_by_css_selector('td > label').text
+        sheet.cell(row_, column).value = name_option
+        column += 1
+        for list_option in option.find_elements_by_css_selector('td > select > option'):
+            sheet.cell(row_, column).value = list_option.text
+            sheet.cell(row_, 2).value = name
+            sheet.cell(row_, 5).value = sku
+            sheet.cell(row_, 7).value = price
+            row_ += 1
+
+        next_row = row_ if row_ > next_row else next_row
+        column += 1
+        if column == 14:
+            break
+
+    photo = [img.get_attribute('src').replace('_thumb/', '/') for img in driver.find_elements_by_css_selector('#_jstl__images_r img') if '/thumbL/' not in img.get_attribute('src')]
+    column = 14
+    for index, img in enumerate(photo):
+        row_ = row + index
+        sheet.cell(row_, column).value = img
+        sheet.cell(row_, column+1).value = index
+        sheet.cell(row_, 2).value = name
+        sheet.cell(row_, 5).value = sku
+        sheet.cell(row_, 7).value = price
+        next_row = row_+1 if row_ > next_row else next_row
+
+    row = next_row if next_row > row else row+1
+
+book.save('text.xlsx')

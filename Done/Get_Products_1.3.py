@@ -12,7 +12,7 @@ from datetime import datetime
 import os
 
 
-class SouCode:
+class Noon:
 
     def __init__(self):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -56,8 +56,12 @@ class SouCode:
                     if un in l:
                         print('- Found')
                         continue
+                try:
+                    part = element.find_element_by_xpath('td[text()="SA"]/following::td[1]').text
+                except:
+                    part = None
 
-                URL.append(element.find_element_by_xpath('td /a[contains(@href,"/sales/")]').get_attribute('href'))
+                URL.append((element.find_element_by_xpath('td /a[contains(@href,"/sales/")]').get_attribute('href'), part))
                 q += 1
             print(q)
             try:
@@ -77,9 +81,10 @@ class SouCode:
         book = Workbook()
         sheet = book.active
         sheet.cell(1, 1).value = 'SKU'
-        sheet.cell(1, 2).value = 'Price'
-        sheet.cell(1, 3).value = 'New Price'
-        sheet.cell(1, 5).value = 'Static'
+        sheet.cell(1, 2).value = 'Partner SKU'
+        sheet.cell(1, 3).value = 'Price'
+        sheet.cell(1, 4).value = 'New Price'
+        sheet.cell(1, 6).value = 'Static'
         try:
             sheet.cell(1, 1).alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
             sheet.cell(1, 2).alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
@@ -90,9 +95,10 @@ class SouCode:
             pass
 
         cont = 2
-        for url in data:
+        for url, partner_sku in data:
             print(url)
             u = True
+            error = 0
             while u:
                 self.driver.get(url)
                 sleep(2)
@@ -102,6 +108,9 @@ class SouCode:
                     sleep(1)
                     u = False
                 except:
+                    if error == 3:
+                        break
+                    error += 1
                     sleep(90)
                     continue
 
@@ -118,17 +127,18 @@ class SouCode:
                     except:
                         new_price = None
                     sheet.cell(cont, 1).value = SKU
-                    sheet.cell(cont, 2).value = price
-                    sheet.cell(cont, 3).value = new_price
-                    sheet.cell(cont, 5).value = static
-                    sheet.cell(cont, 6).value = url
+                    sheet.cell(cont, 2).value = partner_sku
+                    sheet.cell(cont, 3).value = price
+                    sheet.cell(cont, 4).value = new_price
+                    sheet.cell(cont, 6).value = static
+                    sheet.cell(cont, 7).value = url
                     if all_type is False:
-                        sheet.cell(cont, 7).value = unc
+                        sheet.cell(cont, 8).value = unc
 
                     print(f'{cont - 1} - {SKU} - Price : {price}')
                     sleep(1)
                 except Exception as e:
-                    sheet.cell(cont, 6).value = url
+                    sheet.cell(cont, 7).value = url
                     print(e)
             cont += 1
             book.save(file_save)
@@ -168,8 +178,8 @@ if __name__ == "__main__":
     else:
         all_type = True
     print(len(l))
-    bot = SouCode()
+    self = Noon()
     input('- Enter : ')
-    bot.Get_Products()
+    self.Get_Products()
 
-# bekj.119@gmail.com
+# bekj.119@gmail.com bh4708251@gmail.com Assad2500@  25 28

@@ -23,16 +23,18 @@ class Main:
     def __init__(self):
         self.book = Workbook()
         self.sheet = self.book.active
+        self.user_data = os.path.expanduser("~") + r'\AppData\Local\Google\Chrome\User Data'
         chrome_options = Options()
-        try:
-            subprocess.Popen(
-                '"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222')
-        except:
-            subprocess.Popen(
-                '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222')
+        chrome_options.add_argument("--user-data-dir={}".format(self.user_data))
+        # try:
+        #     subprocess.Popen(
+        #         '"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222')
+        # except:
+        #     subprocess.Popen(
+        #         '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222')
         chrome_options.add_argument("--disable-infobars")
         chrome_options.add_argument("--disable-notifications")
-        chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+        # chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), chrome_options=chrome_options)
 
         self.login()
@@ -102,15 +104,24 @@ class Main:
             if not next_ok:
                 break
 
-            try:
-                self.driver.find_element_by_css_selector('.pagination-next').click()
-                sleep(1)
-            except:
-                break
+            # try:
+            #     self.driver.find_element_by_css_selector('.pagination-next').click()
+            #     sleep(1)
+            # except:
+            #     break
+            # while True:
+            #     if 'loading' not in self.driver.find_element_by_css_selector('.loader').get_attribute('class'):
+            #         break
+            #     else:
+            #         print('loading')
+            #     sleep(5)
 
+            self.driver.find_element_by_css_selector('html').send_keys(Keys.END)
             sleep(1)
+
             while True:
-                if 'loading' not in self.driver.find_element_by_css_selector('.loader').get_attribute('class'):
+                if 'block;' not in self.driver.find_element_by_css_selector('.svg-icon.spinner-container').get_attribute('style'):
+                    sleep(1)
                     break
                 else:
                     print('loading')
@@ -183,31 +194,45 @@ class Main:
             self.sheet.cell(n, 13).value = total
             n += 1
             for ele in self.driver.find_elements_by_css_selector('.order-products-container .product-row-rd'):
-                # ele.find_element_by_css_selector('share-button').get_attribute('url').split('=')[1].split('qty')[0]
-                # product_price = ele.find_element_by_css_selector('.row > .status-column > p > strong').text
-                # qty = ele.find_element_by_css_selector('.row > .status-column ~ div > p > strong').text
-                product_number = ele.find_element_by_css_selector('span[name="AddToCart"]').get_attribute('data-part-number')
-                product_dsk = ele.find_element_by_css_selector('.prod-desc').text
-                product_price = ele.find_element_by_css_selector('div.col-buffer > span ~ span').text
-                qty = ele.find_element_by_css_selector('div.col-buffer-sm > span ~ span').text
                 try:
-                    discount = ele.find_element_by_css_selector('span.discount-line-price').text.replace('-', '')
-                except:
-                    discount = None
+                    # ele.find_element_by_css_selector('share-button').get_attribute('url').split('=')[1].split('qty')[0]
+                    # product_price = ele.find_element_by_css_selector('.row > .status-column > p > strong').text
+                    # qty = ele.find_element_by_css_selector('.row > .status-column ~ div > p > strong').text
+                    product_number = ele.find_element_by_css_selector('span[name="AddToCart"]').get_attribute('data-part-number')
+                    try:
+                        product_dsk = ele.find_element_by_css_selector('.prod-desc').text
+                    except:
+                        product_dsk = None
+                    try:
+                        # product_price = ele.find_element_by_css_selector('div.col-buffer > span ~ span').text
+                        product_price = ele.find_element_by_xpath('div/div[span[text()="Price:"]]/span[2]').text
+                    except:
+                        product_price = None
+                    try:
+                        # qty = ele.find_element_by_css_selector('div.col-buffer-sm > span ~ span').text
+                        qty = ele.find_element_by_xpath('div/div[span[text()="Qty:"]]/span[2]').text
+                    except:
+                        qty = None
+                    try:
+                        discount = ele.find_element_by_css_selector('span.discount-line-price').text.replace('-', '')
+                    except:
+                        discount = None
 
-                self.sheet.cell(n, 3).value = product_number
-                self.sheet.cell(n, 4).value = product_dsk
-                self.sheet.cell(n, 5).value = product_price
-                self.sheet.cell(n, 6).value = qty
-                self.sheet.cell(n, 7).value = discount
-                n += 1
+                    self.sheet.cell(n, 3).value = product_number
+                    self.sheet.cell(n, 4).value = product_dsk
+                    self.sheet.cell(n, 5).value = product_price
+                    self.sheet.cell(n, 6).value = qty
+                    self.sheet.cell(n, 7).value = discount
+                    n += 1
+                except Exception as e:
+                    print(e)
             n += 1
             self.book.save('new.xlsx')
 
 
 # email = 'bh4708251@gmail.com'
 # password = 'Assad098765@'
-id_stop = input('- Enter Number')  # '953067002' 953391085
+id_stop = input('- Enter Number')  # '953067002' 953391085 953965107
 app = Main()
 input('- Enter..')
 app.get_product()

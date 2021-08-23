@@ -47,6 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             sheet = load_workbook(save_file).active
             self.Main.sheet = sheet
             self.ui.pushButton.setDisabled(True)
+
             # with open(save_file, 'r', encoding="utf-8") as f:
             #     self.Main.data = f.read()
 
@@ -122,7 +123,7 @@ class Main(QThread):
 
     def open(self):
         print('- open browser')
-        user_data = self.prof
+        user_data = self.prof # r'C:\Users\3mora\AppData\Roaming\Mozilla\Firefox\Profiles\63z4wsqh.default-release'
         fp = webdriver.FirefoxProfile(user_data)
         options = webdriver.FirefoxOptions()
         options.add_argument('--no-sandbox')
@@ -135,6 +136,10 @@ class Main(QThread):
             self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_profile=fp,
                                             options=options)
         self.driver.get('https://badayih.com/wp-admin/post-new.php?wp-post-new-reload=true')
+        try:
+            self.driver.find_element_by_css_selector('[role="dialog"] [aria-label="إغلاق النافذة"]').click()
+        except:
+            pass
         self.finish.emit()
         print('- end')
 
@@ -165,8 +170,14 @@ class Main(QThread):
         print(post)
         self.driver.get('https://badayih.com/wp-admin/post-new.php?wp-post-new-reload=true')
         sleep(6)
-        WebDriverWait(self.driver, 20).until(
-            (ec.presence_of_element_located((By.CSS_SELECTOR, 'iframe')))).send_keys(' ')
+        try:
+            WebDriverWait(self.driver, 20).until(
+                (ec.presence_of_element_located((By.CSS_SELECTOR, 'iframe')))).send_keys(' ')
+        except:
+            self.driver.execute_script("document.querySelector('#content-tmce').click()")
+            WebDriverWait(self.driver, 20).until(
+                (ec.presence_of_element_located((By.CSS_SELECTOR, 'iframe')))).send_keys(' ')
+
         WebDriverWait(self.driver, 20).until(
             (ec.presence_of_element_located((By.CSS_SELECTOR, 'iframe')))).send_keys(post)
         sleep(3)
@@ -226,11 +237,11 @@ class Main(QThread):
         sleep(5)
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    app.exec_()
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = MainWindow()
+#     window.show()
+#     app.exec_()
 
 '''
 https://badayih.com/wp-admin/post-new.php?wp-post-new-reload=true
@@ -238,6 +249,6 @@ https://badayih.com/wp-admin/
 user
 
 qSVTZzzM#o9gi*q6cJxza02I
-pyside2-uic mainwindow.ui -o mainwindow.py
+pyside2-uic untitled.ui -o main.py
 
 '''

@@ -9,7 +9,6 @@ import urllib3
 urllib3.disable_warnings()
 import urllib, os, requests, json, re
 
-
 # kwefii 6:47--------9:49   3500 43
 # kevindavid
 # hasanalhalaby
@@ -21,6 +20,7 @@ headers_and = {
     'X-IG-App-ID': '567067343352427', 'X-IG-Bandwidth-Speed-KBPS': '-1.000', 'X-IG-Bandwidth-TotalBytes-B': '0',
     'X-IG-Bandwidth-TotalTime-MS': '0', 'X-FB-HTTP-Engine': 'Liger'}
 
+
 class Insta:
     def __init__(self):
         print('''
@@ -28,13 +28,14 @@ class Insta:
         self.images_path = None
         self.videos_path = None
         self.numm = []
+        self.num = 2
         ######################################################################
         #######################################################################
         self.session1 = self.login(username='201028946519', password='ammar2020')
         sleep(1)
         self.session2 = self.login(username='ebrahemelmorsy22001@gmail.com', password='ammar2020')
         sleep(1)
-        # self.session3 = self.login(username='ebrahemelmorsy22002@gmail.com', password='ammar2020')
+        self.session3 = self.login(username='ebrahemelmorsy22002@gmail.com', password='ammar2020')
         # sleep(1)
         # self.session4 = self.login(username='pywpywpy', password='pYpY2222')
         # sleep(1)
@@ -51,6 +52,7 @@ class Insta:
         # sleep(1)
         # self.session10 = self.login(username='shakermouty@gmail.com', password='ammar2020')
         # sleep(1)
+
     #     (username='3mora534', password='ammar2200')
 
     #####################################################################
@@ -106,8 +108,8 @@ class Insta:
             session = self.session1
         elif b == 2:
             session = self.session2
-        # elif b == 3:
-        #     session = self.session3
+        else:
+            session = self.session3
         # elif b == 4:
         #     session = self.session10
         # elif b == 5:
@@ -120,13 +122,14 @@ class Insta:
         #     session = self.session8
         # elif b == 9:
         #     session = self.session9
-        else:
-            session = self.session10
+        # else:
+        #     session = self.session1
         return session
 
     ########################################################################################################################
     ########################################################################################################################
     def get_followers(self):
+        self.num = 2
         try:
             while True:
                 url = input(' put username  ( example:- chhc  ) : ')  # chhc
@@ -145,13 +148,13 @@ class Insta:
                 self.roots = 2
             now1 = datetime.now()
             start_time = now1.strftime("%H:%M:%S")
-            '''try:
+            try:
                 path = "Insta_Followers.xlsx"
                 self.book = load_workbook(path)
                 self.sheet = self.book.active
                 self.end_cell = self.sheet.max_row
-                self.root=1
-            except:#48
+                self.root = 1
+            except:  # 48
                 self.book = Workbook()
                 self.sheet = self.book.active
                 self.sheet['B1'] = 'user name'
@@ -161,10 +164,10 @@ class Insta:
                 self.sheet['C1'] = 'full name'
                 self.sheet.column_dimensions['C'].width = 34
                 self.sheet['A1'] = 'profile pic'
-                #self.sheet.column_dimensions['A'].width = 60
+                # self.sheet.column_dimensions['A'].width = 60
                 self.sheet.column_dimensions['A'].width = 13
-                self.root=2
-                self.end_cell=None'''
+                self.root = 2
+                self.end_cell = None
             print('getting followers')
             p = 1
             b = 1
@@ -179,85 +182,86 @@ class Insta:
             print(user_id)
             resp = self.gf(user_id)
             #####################################################################
-        #     while u:
-        #         if resp != 'erorr':
-        #             u = resp['data']['user']['edge_followed_by']['page_info']['has_next_page']
-        #             end_cursor = resp['data']['user']['edge_followed_by']['page_info']['end_cursor']
-        #             for i in resp['data']['user']['edge_followed_by']['edges']:
-        #                 user = i['node']['username']
-        #                 '''id=i['node']['id']
-        #                 full_name=i['node']['full_name']
-        #                 profile_pic_url=i['node']['profile_pic_url']'''
-        #                 print('{0}:{1}'.format(p, user))
-        #                 self.user_info(user, b)
-        #                 #################################################################################
-        #                 # self.save_data(p=p,root=self.root,end_cell=self.end_cell,data=[user,id,full_name,profile_pic_url])
-        #                 ##################################################################################
-        #
-        #                 p += 1
-        #                 if b == None:
-        #                     b = 1
-        #                 elif b < 10:
-        #                     b += 1
-        #                 elif b == 10:
-        #                     b = 1
-        #
-        #             resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
-        #         else:
-        #             print('*********** plze wait **************')
-        #             sleep(25)
-        #             if b == None:
-        #                 b = 1
-        #             elif b < 10:
-        #                 b += 1
-        #             elif b == 10:
-        #                 b = 1
-        #             resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
-        #         # self.book.save('Insta_Followers.xlsx')
-
             while u:
-                try:
-                    if b is None:
-                        b = 1
-                    elif b < 10:
-                        b += 1
-                    elif b == 10:
-                        b = 1
+                if resp != 'erorr':
+                    u = resp['data']['user']['edge_followed_by']['page_info']['has_next_page']
+                    end_cursor = resp['data']['user']['edge_followed_by']['page_info']['end_cursor']
+                    for i in resp['data']['user']['edge_followed_by']['edges']:
+                        user = i['node']['username']
+                        id = i['node']['id']
+                        '''full_name=i['node']['full_name']
+                        profile_pic_url=i['node']['profile_pic_url']'''
+                        # print('{0}:{1}'.format(p, user))
+                        self.user_info(id, b)
+                        #################################################################################
+                        # self.save_data(p=p,root=self.root,end_cell=self.end_cell,data=[user,id,full_name,profile_pic_url])
+                        ##################################################################################
 
-                    if resp != 'error':
-                        if len(resp['data']['user']['edge_followed_by']['edges']) != 0:
-                            u = resp['data']['user']['edge_followed_by']['page_info']['has_next_page']
-                            end_cursor = resp['data']['user']['edge_followed_by']['page_info']['end_cursor']
-                            for i in resp['data']['user']['edge_followed_by']['edges']:
-                                user = i['node']['username']
-                                Id = i['node']['id']
-                                # self.user_info(Id, b)
-                                print(f'{p} : {user}')
-                                p += 1
-                        else:
-                            print('- Please Wait....')
-                            sleep(5)
-
-                        sleep(1.5)
-                        resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
-                    else:
-                        print('- Error, Please Wait....')
-                        sleep(40)
-                        if b is None:
+                        p += 1
+                        if b == None:
                             b = 1
                         elif b < 10:
                             b += 1
                         elif b == 10:
                             b = 1
-                        resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
-                except Exception as e:
-                    print(e)
 
-                except:
-                    pass
+                    resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
+                    sleep(5)
+                else:
+                    print('*********** plze wait **************')
+                    sleep(25)
+                    if b == None:
+                        b = 1
+                    elif b < 10:
+                        b += 1
+                    elif b == 10:
+                        b = 1
+                    resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
+                self.book.save('Insta_Followers.xlsx')
+
+            # while u:
+            #     try:
+            #         if b is None:
+            #             b = 1
+            #         elif b < 10:
+            #             b += 1
+            #         elif b == 10:
+            #             b = 1
+            #
+            #         if resp != 'error':
+            #             if len(resp['data']['user']['edge_followed_by']['edges']) != 0:
+            #                 u = resp['data']['user']['edge_followed_by']['page_info']['has_next_page']
+            #                 end_cursor = resp['data']['user']['edge_followed_by']['page_info']['end_cursor']
+            #                 for i in resp['data']['user']['edge_followed_by']['edges']:
+            #                     user = i['node']['username']
+            #                     Id = i['node']['id']
+            #                     # self.user_info(Id, b)
+            #                     print(f'{p} : {user}')
+            #                     p += 1
+            #             else:
+            #                 print('- Please Wait....')
+            #                 sleep(5)
+            #
+            #             sleep(1.5)
+            #             resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
+            #         else:
+            #             print('- Error, Please Wait....')
+            #             sleep(40)
+            #             if b is None:
+            #                 b = 1
+            #             elif b < 10:
+            #                 b += 1
+            #             elif b == 10:
+            #                 b = 1
+            #             resp = self.gf(user_id=user_id, end_cursor=end_cursor, b=b)
+            #     except Exception as e:
+            #         print(e)
+            #
+            #     except:
+            #         pass
         except Exception as e:
-            print(e)
-        # self.book.save('Insta_Followers.xlsx')
+            print(e, 'eee')
+        self.book.save('Insta_Followers.xlsx')
         # self.book.close()
         now = datetime.now()
         end_time = now.strftime("%H:%M:%S")
@@ -368,7 +372,7 @@ class Insta:
         #         elif b == 10:
         #             b = 1
         #         resp = self.gfing(user_id=user_id, end_cursor=end_cursor, b=b)
-            # self.book.save('Insta_Following.xlsx')
+        # self.book.save('Insta_Following.xlsx')
         while u:
             try:
                 if b is None:
@@ -473,13 +477,19 @@ class Insta:
 
     ########################################################################################################################
     ########################################################################################################################
-    def user_info(self, user_id, b=None):
+    def user_info(self, username, b=None):
+        self.book = Workbook()
+        self.sheet = self.book.active
+        r = self.session1.get('https://www.instagram.com/{0}/?__a=1'.format(username))
+        user_id = r.json()['graphql']['user']['id']
 
+        number = []
+        email = []
         try:
             session = self.sessions(b)
             # sleep(2.5)
             r = session.get(f'https://i.instagram.com/api/v1/users/{user_id}/info/', headers=headers_and).json()
-            if r.get('status')=='ok':
+            if r.get('status') == 'ok':
                 public_email = r.get('user').get('public_email')
                 public_phone_number = r.get('user').get('public_phone_number')
                 contact_phone_number = r.get('user').get('contact_phone_number')
@@ -495,7 +505,6 @@ class Insta:
                         email = re.findall(r'[\w\.-]+@[\w-]+\.[\w-]+', full_name)
                     else:
                         email = []
-                    print(email)
                 if not public_phone_number and not contact_phone_number:
                     if re.findall(r'\d{8,15}', bio):
                         number = re.findall(r'\d{8,15}', bio)
@@ -503,11 +512,21 @@ class Insta:
                         number = re.findall(r'\d{8,15}', full_name)
                     else:
                         number = []
-                    print(number)
-
-                print(f'username:{username} is_business_account:{is_business} email:{public_email}  number : {public_phone_number}, {contact_phone_number}')
+                self.sheet.cell(self.num, 1).value = userid
+                self.sheet.cell(self.num, 2).value = username
+                self.sheet.cell(self.num, 3).value = full_name
+                self.sheet.cell(self.num, 4).value = bio
+                self.sheet.cell(self.num, 5).value = public_email
+                self.sheet.cell(self.num, 6).value = public_phone_number
+                self.sheet.cell(self.num, 7).value = contact_phone_number
+                self.sheet.cell(self.num, 8).value = is_business
+                self.sheet.cell(self.num, 9).value = '\n'.join(number)
+                self.sheet.cell(self.num, 10).value = '\n'.join(email)
+                self.num += 1
+                print(
+                    f'{self.num} username:{username} is_business_account:{is_business} email:{public_email}  number : {public_phone_number}, {contact_phone_number}')
         except Exception as e:
-            print(e)
+            print(e, 'jj')
 
     def user_info_2(self, user_name, b=None):
         try:
@@ -1009,15 +1028,21 @@ def main():
 #         elif Input == 'close' or Input == 'c' or Input == '7':
 #             exit()
 
-    # inst.get_followers()
-    # inst.get_comments()
-    # inst.get_likes()
-    # inst.Download()
-    # img "https://www.instagram.com/p/CAYP9-zJjVA/?__a=1"
-    # side "https://www.instagram.com/p/CAfbugFAw5o/?__a=1"
-    # videi "http://www.instagram.com/p/B_XP3L_pjjl/?__a=1"
+# inst.get_followers()
+# inst.get_comments()
+# inst.get_likes()
+# inst.Download()
+# img "https://www.instagram.com/p/CAYP9-zJjVA/?__a=1"
+# side "https://www.instagram.com/p/CAfbugFAw5o/?__a=1"
+# videi "http://www.instagram.com/p/B_XP3L_pjjl/?__a=1"
 
 
 if __name__ == '__main__':  # 10:48-->
     inst = Insta()
-    inst.get_likes()
+    # inst.get_followers()
+
+    u = ['miss4hanoo', 'exabbi_', '_sfwz', 'hadeelalyateem', 'princesse_khokha', 'n.m.a112273', 'khalidammar1',
+         'ali_ammar11', 'zakiammar', 'abod_.gh', 'meedoalghamdi', 'huda_iis', 'hadeel.sii', 'mjdlshrbybwylyn',
+         'zahra.ammar', 'hadeel_iis']
+    for uu in u:
+        inst.user_info(uu, 1)

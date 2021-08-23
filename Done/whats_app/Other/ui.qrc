@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>like pro/logo middle.png</file>
+    <file>like pro/logo superior.png</file>
+    <file>like pro/final.png</file>
+  </qresource>
+</RCC>
