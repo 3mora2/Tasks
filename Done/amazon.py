@@ -1,14 +1,14 @@
+import subprocess
 import traceback
 from time import sleep
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-# from selenium.webdriver.chrome.options import Options
-# import subprocess
 
 
 class Main:
@@ -91,13 +91,19 @@ class Main:
                                 self.driver.close()
                                 sleep(1)
                                 self.driver.switch_to.window(self.driver.window_handles[0])
-                                sleep(1)
+                                sleep(2)
+                                if self.driver.find_element_by_css_selector('kat-toggle#advanced-view-switch').get_attribute('checked') != 'true':
+                                    self.driver.find_element_by_css_selector('kat-toggle#advanced-view-switch').click()
+                                    sleep(2)
+
                                 self.driver.find_element_by_css_selector('kat-input#item_sku').send_keys(str(barcode))
                                 sleep(1)
                                 self.driver.find_element_by_css_selector('kat-input#standard_price'
                                                                          ).send_keys(str(price))
                                 sleep(1)
                                 self.driver.find_element_by_css_selector('kat-input#quantity').send_keys(str(quantity))
+                                sleep(1)
+                                self.driver.find_element_by_css_selector('kat-input#fulfillment_latency').send_keys(latency)
                                 sleep(1)
                                 _ = self.driver.find_element_by_css_selector(
                                     'kat-button#EditSaveAction').location_once_scrolled_into_view
@@ -146,10 +152,15 @@ if __name__ == '__main__':
             print('- No such file or directory')
         except Exception as e:
             print(e)
-
-    app = Main()
+    latency = input('- Enter latency number(8): ')
+    self = Main()
     input('- Enter .....')
-    app.start()
+    self.start()
 
 # Assad098765
 # bh2030098765@gmail.com
+'''
+perfect203070@gmail.com
+Assad102030
+
+'''

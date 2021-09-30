@@ -49,6 +49,7 @@ class Thread(threading.Thread):
             self.p = input('- break: ')
             if self.p == 's':
                 break
+            sleep(4)
 
 
 class Main:

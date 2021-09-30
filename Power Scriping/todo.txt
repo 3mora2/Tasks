@@ -1,0 +1,40 @@
+                                        ------ Power Scraping ------
+ Requires:
+        1 - main window ( icon for programs )
+        2 - window maps ( Google Maps - yellow pages )
+        3 - window social ( facebook - instagram )
+        4 - window webs ( noon - souq - Amazon - carrefour - maroof - jarir - olx - jumia )
+        5 - window activation for each windows
+
+ Content:
+        - File Main Window_Google
+
+        - File Maps
+            - Google Maps
+            - Yellow Pages
+
+        - File Social
+            - facebook
+            - instagram
+
+        - File Webs
+            - noon
+            - souq
+            - Amazon
+            - carrefour
+            - maroof
+            - jarir
+            - olx
+            - jumia
+
+        - File activates
+
+- Instagram Pages:
+    - manage account
+    - extract followers
+    - extract followings
+    - extract likes
+    - extract comments
+    - extract information by ID
+    - extract posts
+    - download posts ( video - photo - slider )

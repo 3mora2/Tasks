@@ -30,6 +30,8 @@ class Carrefour:
         self.sheet.cell(row=1, column=5).value = 'Original Price'
         self.sheet.cell(row=1, column=6).value = 'Supplier'
         self.sheet.cell(row=1, column=7).value = 'URL'
+        self.sheet.cell(row=1, column=8).value = 'IMG'
+        self.sheet.cell(row=1, column=9).value = 'DataTime'
         self.sheet.column_dimensions['A'].width = 60
         self.sheet.column_dimensions['B'].width = 20
         self.sheet.column_dimensions['C'].width = 15
@@ -95,6 +97,10 @@ class Carrefour:
                     discount = None
                 supplier = element['supplier']
                 product_url = 'https://www.carrefourksa.com' + element['links']['productUrl']['href']
+                try:
+                    img_url = element['links']['images'][0]['href']
+                except:
+                    img_url = None
                 list_element.append(element)
                 self.sheet.cell(row=num + 2, column=1).value = name
                 self.sheet.cell(row=num + 2, column=2).value = brand
@@ -103,6 +109,8 @@ class Carrefour:
                 self.sheet.cell(row=num + 2, column=5).value = price
                 self.sheet.cell(row=num + 2, column=6).value = supplier
                 self.sheet.cell(row=num + 2, column=7).value = product_url
+                self.sheet.cell(row=num + 2, column=8).value = img_url
+                self.sheet.cell(row=num + 2, column=9).value = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
                 for column in range(1, 8):
                     try:
                         self.sheet.cell(num + 2, column).alignment = Alignment(horizontal='center', vertical='center',
@@ -124,6 +132,8 @@ class OthaimMarkets:
         self.sheet.cell(row=1, column=3).value = 'Price'
         self.sheet.cell(row=1, column=4).value = 'Old Price'
         self.sheet.cell(row=1, column=5).value = 'URL'
+        self.sheet.cell(row=1, column=6).value = 'IMG'
+        self.sheet.cell(row=1, column=7).value = 'DataTime'
         self.sheet.column_dimensions['A'].width = 60
         self.sheet.column_dimensions['B'].width = 15
         self.sheet.column_dimensions['C'].width = 6
@@ -165,6 +175,10 @@ class OthaimMarkets:
             except:
                 price = element.find_element_by_css_selector('.price').text.replace('ريال', '')
                 old_price = None
+            try:
+                img_url = element.find_element_by_css_selector('a>img.product-retina').get_attribute('src')
+            except:
+                img_url = None
 
             if url in list_u:
                 print('- found')
@@ -176,6 +190,8 @@ class OthaimMarkets:
             self.sheet.cell(row=num, column=3).value = price
             self.sheet.cell(row=num, column=4).value = old_price
             self.sheet.cell(row=num, column=5).value = url
+            self.sheet.cell(row=num, column=6).value = img_url
+            self.sheet.cell(row=num, column=7).value = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
             for column in range(1, 6):
                 try:
                     self.sheet.cell(num, column).alignment = Alignment(horizontal='center', vertical='center',
@@ -205,6 +221,8 @@ class LuluhyperMarket:
         self.sheet.cell(row=1, column=5).value = 'Original Price'
         self.sheet.cell(row=1, column=6).value = 'INFO'
         self.sheet.cell(row=1, column=7).value = 'URL'
+        self.sheet.cell(row=1, column=8).value = 'IMG'
+        self.sheet.cell(row=1, column=9).value = 'DataTime'
         self.sheet.column_dimensions['A'].width = 60
         self.sheet.column_dimensions['B'].width = 10
         self.sheet.column_dimensions['C'].width = 17
@@ -257,20 +275,28 @@ class LuluhyperMarket:
                 sleep(1)
                 title = self.driver.find_element_by_css_selector('h1').text
                 try:
-                    brand = self.driver.find_element_by_css_selector('[property="product:brand"]').get_attribute('content')
+                    brand = self.driver.find_element_by_css_selector('[property="product:brand"]').get_attribute(
+                        'content')
                 except:
                     brand = None
+                try:
+                    img_url = self.driver.find_element_by_css_selector('[property="og:image"]').get_attribute(
+                        'content')
+                except:
+                    img_url = None
                 try:
                     cat = self.driver.find_elements_by_css_selector('nav>ol>li>a')[-1].text
                 except:
                     cat = None
                 try:
-                    old_price = self.driver.find_element_by_css_selector('.price-tag.detail .off').text.replace('AED','').strip()
+                    old_price = self.driver.find_element_by_css_selector('.price-tag.detail .off').text.replace('AED',
+                                                                                                                '').strip()
                 except:
                     old_price = None
                 try:
                     # price = self.driver.find_elements_by_css_selector('.prod-price > ul > li > span')[-1].text
-                    price = self.driver.find_element_by_css_selector('[property="product:price:amount"]').get_attribute('content')
+                    price = self.driver.find_element_by_css_selector('[property="product:price:amount"]').get_attribute(
+                        'content')
                 except:
                     price = None
                 try:
@@ -284,6 +310,8 @@ class LuluhyperMarket:
                 self.sheet.cell(row=num + 2, column=5).value = old_price
                 self.sheet.cell(row=num + 2, column=6).value = inf
                 self.sheet.cell(row=num + 2, column=7).value = link
+                self.sheet.cell(row=num + 2, column=8).value = img_url
+                self.sheet.cell(row=num + 2, column=9).value = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
                 for column in range(1, 8):
                     try:
                         self.sheet.cell(num + 2, column).alignment = Alignment(horizontal='center', vertical='center',
@@ -323,6 +351,8 @@ class Danube:
         self.sheet.cell(row=1, column=3).value = 'Price'
         self.sheet.cell(row=1, column=4).value = 'Original Price'
         self.sheet.cell(row=1, column=5).value = 'URL'
+        self.sheet.cell(row=1, column=6).value = 'IMG'
+        self.sheet.cell(row=1, column=7).value = 'DataTime'
         self.sheet.column_dimensions['A'].width = 60
         self.sheet.column_dimensions['B'].width = 15
         self.sheet.column_dimensions['C'].width = 10
@@ -354,11 +384,21 @@ class Danube:
                     old_price = element.find_element_by_css_selector('.product-price__original-price__span').text
                 except:
                     old_price = None
+                try:
+                    img_url = element.find_element_by_css_selector('.product-box__image__element').get_attribute(
+                        'style')
+                    img_url = img_url.replace('background-image: url(', '').replace(');', '').replace('/product/',
+                                                                                                      '/large/').replace(
+                        '"', '')
+                except:
+                    img_url = None
                 self.sheet.cell(row=num + 2, column=1).value = title
                 self.sheet.cell(row=num + 2, column=2).value = cat
                 self.sheet.cell(row=num + 2, column=3).value = price if old_price else None
                 self.sheet.cell(row=num + 2, column=4).value = old_price if old_price else price
                 self.sheet.cell(row=num + 2, column=5).value = url
+                self.sheet.cell(row=num + 2, column=6).value = img_url
+                self.sheet.cell(row=num + 2, column=7).value = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
                 for column in range(1, 7):
                     try:

@@ -1,0 +1,62 @@
+2021-09-17 16:25:10.472046: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 110, in add_new
+    self.to_file(key)
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 95, in to_file
+    f.write(json.dumps(old))
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+TypeError: keys must be str, int, float, bool or None, not bytes
+ 
+2021-09-17 16:27:43.062026: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 111, in add_new
+    self.to_file(key)
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 96, in to_file
+    f.write(json.dumps(old))
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\json\encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+TypeError: keys must be str, int, float, bool or None, not bytes
+ 
+2021-09-17 16:34:43.904162: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 113, in add_new
+    return True
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 95, in to_file
+    print(json.dumps(old))
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\base64.py", line 58, in b64encode
+    encoded = binascii.b2a_base64(s, newline=False)
+TypeError: a bytes-like object is required, not 'str'
+ 
+2021-09-17 16:36:00.320761: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 113, in add_new
+    self.to_file(key)
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 94, in to_file
+    old[base64.b64encode(self.app).decode('UTF-8')] = self.encoding_(data)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\base64.py", line 58, in b64encode
+    encoded = binascii.b2a_base64(s, newline=False)
+TypeError: a bytes-like object is required, not 'str'
+ 
+2021-09-17 16:42:12.422047: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 115, in add_new
+    self.to_file(key)
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 94, in to_file
+    print(base64.b64encode(self.app).decode('UTF-8'))
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\base64.py", line 58, in b64encode
+    encoded = binascii.b2a_base64(s, newline=False)
+TypeError: a bytes-like object is required, not 'str'
+ 
+2021-09-17 16:42:58.697545: Traceback (most recent call last):
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 114, in add_new
+    self.to_file(key)
+  File "C:\Users\3mora\Dropbox\All\Power Scriping\Activations\activation.py", line 95, in to_file
+    old[base64.b64encode(self.app).decode('ascii')] = self.encoding_(data)
+  File "C:\Users\3mora\anaconda3\envs\autoenv\lib\base64.py", line 58, in b64encode
+    encoded = binascii.b2a_base64(s, newline=False)
+TypeError: a bytes-like object is required, not 'str'
+ 

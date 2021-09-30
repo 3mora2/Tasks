@@ -90,14 +90,26 @@ class CollectPosts(object):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.driver.get('https://sa.aqar.fm/login')
 
+    def close(self):
+        try:
+            self.driver.find_element_by_css_selector('.national-closeBtn').click()
+            sleep(1)
+        except:
+            pass
+
     def login(self):
-        sleep(1)
-        self.driver.find_element_by_css_selector('input[name="phone"]').send_keys(email)
-        sleep(1)
-        self.driver.find_element_by_css_selector('input[name="password"]').send_keys(password)
-        sleep(1)
-        self.driver.find_element_by_css_selector('a.submitBtn').click()
-        sleep(2)
+        try:
+            sleep(1)
+            self.driver.find_element_by_css_selector('input[name="phone"]').send_keys(email)
+            sleep(1)
+            self.driver.find_element_by_css_selector('input[name="password"]').send_keys(password)
+            sleep(1)
+            # self.driver.find_element_by_css_selector('a.submitBtn').click()
+            self.close()
+            self.driver.execute_script("document.querySelector('a.submitBtn').click()")
+            sleep(2)
+        except:
+            pass
 
     def safe_find_element_by(self, by, elem):
         try:
@@ -263,7 +275,7 @@ if __name__ == '__main__':
 
     self = CollectPosts()
     self.login()
-
+    input('- Enter: ')
     self.selenium_posts()
 
 '''
