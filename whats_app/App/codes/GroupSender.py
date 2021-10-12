@@ -73,17 +73,20 @@ class GroupSender(QThread):
                     if not self.tableWidget_7.item(im, 2):
                         continue
 
-                    self.tableWidget_7.item(im, 0).setSelected(True)
+                    # self.tableWidget_7.item(im, 0).setSelected(True)
                     if self.tableWidget_7.item(im, 2).text().strip() == 'text':
                         text = self.tableWidget_7.item(im, 0).text().strip()
                         state = self.send_text(number, text)
 
                     elif self.tableWidget_7.item(im, 2).text().strip() == 'img':
                         img = self.tableWidget_7.item(im, 1).text().strip()
-                        text = self.tableWidget_7.item(im, 0).text().strip()
+                        try:
+                            text = self.tableWidget_7.item(im, 0).text().strip()
+                        except:
+                            text = None
                         state = self.send_img(number, img, text)
 
-                    self.tableWidget_7.item(im, 0).setSelected(False)
+                    # self.tableWidget_7.item(im, 0).setSelected(False)
 
                 self.tableWidget_6.setItem(i, 1, QTableWidgetItem(str(state)))
                 self.tableWidget_6.item(i, 0).setSelected(False)
@@ -155,8 +158,8 @@ class GroupSender(QThread):
                 element = WebDriverWait(self.driver, 5).until(
                     (ec.visibility_of_element_located(
                         (By.XPATH, '//div[//*[@data-icon="emoji-input"]]/div/div[@role="textbox"]'))))
-
-                self.driver.execute_script(script, element, text)
+                if text:
+                    self.driver.execute_script(script, element, text)
                 sleep(2)
                 element.send_keys(Keys.ENTER)
 

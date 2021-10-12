@@ -29,16 +29,20 @@ class AddMembers(QThread):
 
     def open_add(self):
         try:
-            sleep(1)
-            WebDriverWait(self.driver, 5).until(
-                (ec.presence_of_element_located((By.CSS_SELECTOR, 'div[role="button"]+div[role="button"]')))).click()
-            sleep(1)
-            WebDriverWait(self.driver, 5).until((ec.presence_of_element_located(
-                (By.CSS_SELECTOR, '[role="button"]+div[data-testid="cell-frame-container"]')))).click()
+            try:
+                WebDriverWait(self.driver, 2).until((ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, '[role="button"]+div[data-testid="cell-frame-container"]')))).click()
+            except:
+                WebDriverWait(self.driver, 5).until(
+                    (ec.presence_of_element_located((By.CSS_SELECTOR, 'div[role="button"]+div[role="button"]')))).click()
+                sleep(1)
+                WebDriverWait(self.driver, 5).until((ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, '[role="button"]+div[data-testid="cell-frame-container"]')))).click()
             self.is_open_add = True
             sleep(1)
-        except:
-            pass
+        except Exception as e:
+            print(e)
+            return False
 
     def run(self):
         self.is_open_add = False
@@ -46,6 +50,7 @@ class AddMembers(QThread):
         if self.driver or self.check_live():
             self.Try = True
 
+            num = 0
             for i in range(self.tableWidget_12.rowCount()):
                 if self.limit and self.limit <= i:
                     self.limit_message.emit()
@@ -62,7 +67,6 @@ class AddMembers(QThread):
                 number = self.tableWidget_12.item(i, 0).text().strip()
                 if number == '':
                     continue
-                self.tableWidget_12.item(i, 0).setSelected(True)
 
                 if not self.is_open_add:
                     self.open_add()
@@ -73,11 +77,17 @@ class AddMembers(QThread):
                     self.error_group.emit()
                     self.eer = True
                     break
+                num += 1
 
                 self.tableWidget_12.setItem(i, 1, QTableWidgetItem(str(state)))
-                self.tableWidget_12.item(i, 0).setSelected(False)
+                if num >= self.number_ber_once:
+                    self.save()
+                    sleep(1)
+                    num = 0
 
-            self.save()
+                # self.is_open_add = False
+            if self.is_open_add:
+                self.save()
             if not self.eer:
                 self.final_message.emit()
         else:
@@ -114,6 +124,7 @@ class AddMembers(QThread):
             self.driver.find_element_by_css_selector('[role="dialog"] span+div+span [role="button"]').click()
             sleep(2)
             self.driver.find_element_by_css_selector('[role="dialog"] [role="button"]+[role="button"]').click()
+            self.is_open_add = False
         except Exception as e:
             print(e)
             pass

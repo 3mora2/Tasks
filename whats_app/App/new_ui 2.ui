@@ -660,7 +660,7 @@ background: transparent;
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>6</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideLeft</enum>
@@ -4453,14 +4453,14 @@ border : 2px solid rgb(255, 255, 255);</string>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QGridLayout" name="gridLayout_34">
+                <layout class="QGridLayout" name="gridLayout_34" rowstretch="1,2,2,2,2">
                  <property name="topMargin">
                   <number>50</number>
                  </property>
                  <property name="bottomMargin">
                   <number>50</number>
                  </property>
-                 <item row="1" column="0">
+                 <item row="2" column="0">
                   <widget class="QPushButton" name="pushButton_53">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -4496,7 +4496,7 @@ border : 2px solid rgb(255, 255, 255);</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="3" column="0">
                   <widget class="QPushButton" name="pushButton_54">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -4532,7 +4532,7 @@ border : 2px solid rgb(255, 255, 255);</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
+                 <item row="1" column="0">
                   <widget class="QPushButton" name="pushButton_52">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -4568,7 +4568,7 @@ border : 2px solid rgb(255, 255, 255);</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
+                 <item row="4" column="0">
                   <widget class="QPushButton" name="pushButton_55">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -4602,6 +4602,59 @@ border : 2px solid rgb(255, 255, 255);</string>
                      <height>50</height>
                     </size>
                    </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QFrame" name="frame_27">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_31">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QSpinBox" name="spinBox_6">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>999999999</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="label_5">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>العدد في المرة </string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                 </layout>

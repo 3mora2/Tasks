@@ -88,17 +88,19 @@ class SenderNumber(QThread):
                     if not self.tableWidget_4.item(im, 2):
                         continue
 
-                    self.tableWidget_4.item(im, 0).setSelected(True)
+                    # self.tableWidget_4.item(im, 0).setSelected(True)
                     if self.tableWidget_4.item(im, 2).text().strip() == 'text':
                         text = self.tableWidget_4.item(im, 0).text().strip()
                         state = self.send_text(number, text)
 
                     elif self.tableWidget_4.item(im, 2).text().strip() == 'img':
                         img = self.tableWidget_4.item(im, 1).text().strip()
-                        text = self.tableWidget_4.item(im, 0).text().strip()
+                        try:
+                            text = self.tableWidget_4.item(im, 0).text().strip()
+                        except:
+                            text = None
                         state = self.send_img(number, img, text)
-
-                    self.tableWidget_4.item(im, 0).setSelected(False)
+                    # self.tableWidget_4.item(im, 0).setSelected(False)
 
                 self.tableWidget_3.setItem(i, 1, QTableWidgetItem(str(state)))
                 self.tableWidget_3.item(i, 0).setSelected(False)

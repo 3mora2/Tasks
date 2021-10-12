@@ -1079,6 +1079,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.AddMember.driver = self.OpenDriver.driver
                 self.AddMember.check_live = self.OpenDriver.check_live
                 self.AddMember.limit = self.limit
+                self.AddMember.number_ber_once = self.spinBox_6.value()
                 self.AddMember.start()
                 self.OpenDriver.is_used_now = True
             else:

@@ -1038,11 +1038,11 @@ def main():
 
 
 if __name__ == '__main__':  # 10:48-->
-    inst = Insta()
-    # inst.get_followers()
+    self = Insta()
+    # self.get_followers()
 
-    u = ['miss4hanoo', 'exabbi_', '_sfwz', 'hadeelalyateem', 'princesse_khokha', 'n.m.a112273', 'khalidammar1',
-         'ali_ammar11', 'zakiammar', 'abod_.gh', 'meedoalghamdi', 'huda_iis', 'hadeel.sii', 'mjdlshrbybwylyn',
-         'zahra.ammar', 'hadeel_iis']
-    for uu in u:
-        inst.user_info(uu, 1)
+    # u = ['miss4hanoo', 'exabbi_', '_sfwz', 'hadeelalyateem', 'princesse_khokha', 'n.m.a112273', 'khalidammar1',
+    #      'ali_ammar11', 'zakiammar', 'abod_.gh', 'meedoalghamdi', 'huda_iis', 'hadeel.sii', 'mjdlshrbybwylyn',
+    #      'zahra.ammar', 'hadeel_iis']
+    # for uu in u:
+    #     self.user_info(uu, 1)
