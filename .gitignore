@@ -10,3 +10,7 @@ noon_project/*/*.xlsx
 *.log
 *.pyc
 whats_app/App/codes/__pycache__/__init__.cpython-39.pyc
+*.exe
+*.xlsx
+*.spec
+*.pyc

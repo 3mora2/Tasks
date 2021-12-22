@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from time import sleep
-
+from webdriver_manager.chrome import ChromeDriverManager
 from openpyxl import Workbook
 
 wb = Workbook()
@@ -33,13 +33,12 @@ https://www.sarouty.ma/fr/broker/marrakani-immobilier-2070
 https://www.sarouty.ma/fr/broker/luximmo-318
 '''
 for page in range(1, 10 + 1):
-    r = s.get(
-        f'https://www.sarouty.ma/fr/broker/luximmo-318?properties[page]={page}&properties[order_by]=-featured')
+    r = s.get(f'https://www.sarouty.ma/fr/broker/luximmo-318?properties[page]={page}&properties[order_by]=-featured')
     for url in r.html.find('.card-list__item a'):
         links.append('https://www.sarouty.ma' + url.attrs['href'])
         print(len(links))
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(ChromeDriverManager().install())
 for urls in links:
     driver.get(urls)
     City = driver.find_elements_by_css_selector('div.breadcrumb a.breadcrumb__link ')[0].text
